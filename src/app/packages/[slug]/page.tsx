@@ -98,7 +98,7 @@ export default async function PackageDetailPage({ params }: Props) {
             />
             <Link
               href="/cart"
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-nile-ink/15 px-5 py-3 text-sm font-semibold text-nile-ink hover:border-nile hover:text-nile sm:w-auto"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-nile-ink/15 px-5 py-3 text-sm font-semibold text-nile-ink transition-all duration-200 hover:scale-[1.03] hover:border-nile hover:bg-nile/5 hover:text-nile active:scale-[0.98] sm:w-auto"
             >
               View cart
             </Link>

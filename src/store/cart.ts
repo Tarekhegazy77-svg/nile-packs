@@ -10,27 +10,63 @@ export type CartItem = {
   quantity: number;
 };
 
+export type CartLine = {
+  product: Product;
+  quantity: number;
+  lineOriginal: number;
+  lineDiscounted: number;
+};
+
 type CartState = {
   items: CartItem[];
+  hasHydrated: boolean;
   addItem: (productId: string, qty?: number) => void;
   removeItem: (productId: string) => void;
   setQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
-  totalItems: () => number;
-  subtotalOriginal: () => number;
-  subtotalDiscounted: () => number;
-  lineItems: () => Array<{
-    product: Product;
-    quantity: number;
-    lineOriginal: number;
-    lineDiscounted: number;
-  }>;
+  setHasHydrated: (value: boolean) => void;
 };
+
+/** Sum of quantities across cart lines. */
+export function getCartTotalItems(items: CartItem[]): number {
+  return items.reduce((sum, i) => sum + i.quantity, 0);
+}
+
+/** Resolve cart items into display lines via product catalog. */
+export function getCartLineItems(items: CartItem[]): CartLine[] {
+  return items
+    .map((i) => {
+      const product = getProductById(i.productId);
+      if (!product) return null;
+      return {
+        product,
+        quantity: i.quantity,
+        lineOriginal: product.priceLE * i.quantity,
+        lineDiscounted: discountedPrice(product.priceLE) * i.quantity,
+      };
+    })
+    .filter((x): x is CartLine => x !== null);
+}
+
+export function getCartSubtotalOriginal(items: CartItem[]): number {
+  return items.reduce((sum, i) => {
+    const p = getProductById(i.productId);
+    return sum + (p ? p.priceLE * i.quantity : 0);
+  }, 0);
+}
+
+export function getCartSubtotalDiscounted(items: CartItem[]): number {
+  return items.reduce((sum, i) => {
+    const p = getProductById(i.productId);
+    return sum + (p ? discountedPrice(p.priceLE) * i.quantity : 0);
+  }, 0);
+}
 
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      hasHydrated: false,
 
       addItem: (productId, qty = 1) => {
         set((state) => {
@@ -68,38 +104,14 @@ export const useCartStore = create<CartState>()(
 
       clearCart: () => set({ items: [] }),
 
-      totalItems: () =>
-        get().items.reduce((sum, i) => sum + i.quantity, 0),
-
-      subtotalOriginal: () =>
-        get().items.reduce((sum, i) => {
-          const p = getProductById(i.productId);
-          return sum + (p ? p.priceLE * i.quantity : 0);
-        }, 0),
-
-      subtotalDiscounted: () =>
-        get().items.reduce((sum, i) => {
-          const p = getProductById(i.productId);
-          return sum + (p ? discountedPrice(p.priceLE) * i.quantity : 0);
-        }, 0),
-
-      lineItems: () =>
-        get()
-          .items.map((i) => {
-            const product = getProductById(i.productId);
-            if (!product) return null;
-            return {
-              product,
-              quantity: i.quantity,
-              lineOriginal: product.priceLE * i.quantity,
-              lineDiscounted: discountedPrice(product.priceLE) * i.quantity,
-            };
-          })
-          .filter((x): x is NonNullable<typeof x> => x !== null),
+      setHasHydrated: (value) => set({ hasHydrated: value }),
     }),
     {
       name: "packages-store-cart",
-      partialize: (state) => ({ items: state.items }),
+      partialize: (s) => ({ items: s.items }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

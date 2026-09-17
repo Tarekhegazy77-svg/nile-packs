@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { ShoppingBag, Check } from "lucide-react";
 import { useCartStore } from "@/store/cart";
 
@@ -18,7 +18,9 @@ export function AddToCartButton({
   const addItem = useCartStore((s) => s.addItem);
   const [justAdded, setJustAdded] = useState(false);
 
-  function handleClick() {
+  function handleClick(e: MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    e.stopPropagation();
     addItem(productId);
     setJustAdded(true);
     window.setTimeout(() => setJustAdded(false), 1400);
@@ -28,10 +30,10 @@ export function AddToCartButton({
     <button
       type="button"
       onClick={handleClick}
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nile ${
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold shadow-sm transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nile ${
         justAdded
-          ? "bg-teal text-white shadow-md"
-          : "bg-nile text-sand hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/25 active:scale-[0.98]"
+          ? "scale-[1.02] bg-teal text-white shadow-md shadow-teal/30"
+          : "bg-nile text-sand hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/30 active:scale-[0.97]"
       } ${className}`}
     >
       {justAdded ? (

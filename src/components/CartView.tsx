@@ -2,27 +2,29 @@
 
 import Link from "next/link";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
-import { useCartStore } from "@/store/cart";
+import {
+  useCartStore,
+  getCartLineItems,
+  getCartSubtotalOriginal,
+  getCartSubtotalDiscounted,
+} from "@/store/cart";
 import { formatLE } from "@/lib/format";
 import { roundMoney, discountPercentLabel } from "@/lib/discount";
 import { PriceDisplay } from "./PriceDisplay";
-import { useHasMounted } from "@/lib/use-has-mounted";
 
 export function CartView() {
-  const mounted = useHasMounted();
-  const lineItems = useCartStore((s) => s.lineItems);
+  const items = useCartStore((s) => s.items);
+  const hasHydrated = useCartStore((s) => s.hasHydrated);
   const setQuantity = useCartStore((s) => s.setQuantity);
   const removeItem = useCartStore((s) => s.removeItem);
-  const subtotalOriginal = useCartStore((s) => s.subtotalOriginal);
-  const subtotalDiscounted = useCartStore((s) => s.subtotalDiscounted);
 
-  const lines = lineItems();
-  const original = roundMoney(subtotalOriginal());
-  const discounted = roundMoney(subtotalDiscounted());
+  const lines = getCartLineItems(items);
+  const original = roundMoney(getCartSubtotalOriginal(items));
+  const discounted = roundMoney(getCartSubtotalDiscounted(items));
   const saved = roundMoney(original - discounted);
   const off = discountPercentLabel();
 
-  if (!mounted) {
+  if (!hasHydrated) {
     return (
       <div className="rounded-2xl border border-nile-ink/8 bg-white px-6 py-16 text-center text-sm text-nile-muted">
         Loading cart…
@@ -45,7 +47,7 @@ export function CartView() {
         </p>
         <Link
           href="/packages"
-          className="mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand transition hover:bg-nile-deep"
+          className="mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/30 active:scale-[0.98]"
         >
           Browse packages
           <ArrowRight className="h-4 w-4" />
@@ -60,12 +62,12 @@ export function CartView() {
         {lines.map(({ product, quantity, lineDiscounted }) => (
           <li
             key={product.id}
-            className="flex flex-col gap-4 rounded-2xl border border-nile-ink/8 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:p-5"
+            className="flex flex-col gap-4 rounded-2xl border border-nile-ink/8 bg-white p-4 shadow-sm transition-shadow duration-200 hover:shadow-md sm:flex-row sm:items-center sm:p-5"
           >
             <div className="min-w-0 flex-1">
               <Link
                 href={`/packages/${product.slug}`}
-                className="font-display text-lg font-semibold text-nile-ink hover:text-nile"
+                className="font-display text-lg font-semibold text-nile-ink transition-colors duration-150 hover:text-nile"
               >
                 {product.name}
               </Link>
@@ -82,7 +84,7 @@ export function CartView() {
                 <button
                   type="button"
                   aria-label="Decrease quantity"
-                  className="inline-flex h-11 w-11 items-center justify-center text-nile-ink transition hover:text-nile"
+                  className="inline-flex h-11 w-11 items-center justify-center text-nile-ink transition-all duration-150 hover:scale-110 hover:text-nile active:scale-95"
                   onClick={() => setQuantity(product.id, quantity - 1)}
                 >
                   <Minus className="h-4 w-4" />
@@ -93,7 +95,7 @@ export function CartView() {
                 <button
                   type="button"
                   aria-label="Increase quantity"
-                  className="inline-flex h-11 w-11 items-center justify-center text-nile-ink transition hover:text-nile"
+                  className="inline-flex h-11 w-11 items-center justify-center text-nile-ink transition-all duration-150 hover:scale-110 hover:text-nile active:scale-95"
                   onClick={() => setQuantity(product.id, quantity + 1)}
                 >
                   <Plus className="h-4 w-4" />
@@ -103,7 +105,7 @@ export function CartView() {
                 type="button"
                 aria-label={`Remove ${product.name}`}
                 onClick={() => removeItem(product.id)}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full text-nile-muted transition hover:bg-terracotta/10 hover:text-terracotta"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full text-nile-muted transition-all duration-150 hover:scale-110 hover:bg-terracotta/10 hover:text-terracotta active:scale-95"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -135,7 +137,7 @@ export function CartView() {
         </p>
         <Link
           href="/checkout"
-          className="mt-6 flex min-h-11 w-full items-center justify-center rounded-full bg-nile py-3 text-sm font-semibold text-sand transition hover:bg-nile-deep"
+          className="mt-6 flex min-h-11 w-full items-center justify-center rounded-full bg-nile py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.02] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/30 active:scale-[0.98]"
         >
           Proceed to checkout
         </Link>

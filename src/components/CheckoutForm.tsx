@@ -2,9 +2,13 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { useHasMounted } from "@/lib/use-has-mounted";
 import { useRouter } from "next/navigation";
-import { useCartStore } from "@/store/cart";
+import {
+  useCartStore,
+  getCartLineItems,
+  getCartSubtotalOriginal,
+  getCartSubtotalDiscounted,
+} from "@/store/cart";
 import { formatLE } from "@/lib/format";
 import { roundMoney, discountPercentLabel } from "@/lib/discount";
 import { CreditCard, Loader2, ShoppingBag, ArrowRight, Info } from "lucide-react";
@@ -15,11 +19,9 @@ type FieldErrors = {
 };
 
 export function CheckoutForm() {
-  const mounted = useHasMounted();
   const router = useRouter();
-  const lineItems = useCartStore((s) => s.lineItems);
-  const subtotalDiscounted = useCartStore((s) => s.subtotalDiscounted);
-  const subtotalOriginal = useCartStore((s) => s.subtotalOriginal);
+  const items = useCartStore((s) => s.items);
+  const hasHydrated = useCartStore((s) => s.hasHydrated);
   const clearCart = useCartStore((s) => s.clearCart);
 
   const [name, setName] = useState("");
@@ -28,13 +30,13 @@ export function CheckoutForm() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
 
-  const lines = lineItems();
-  const total = roundMoney(subtotalDiscounted());
-  const original = roundMoney(subtotalOriginal());
+  const lines = getCartLineItems(items);
+  const total = roundMoney(getCartSubtotalDiscounted(items));
+  const original = roundMoney(getCartSubtotalOriginal(items));
   const saved = roundMoney(original - total);
   const off = discountPercentLabel();
 
-  if (!mounted) {
+  if (!hasHydrated) {
     return (
       <div className="rounded-2xl border border-nile-ink/8 bg-white px-6 py-12 text-center text-sm text-nile-muted">
         Loading checkout…
@@ -58,14 +60,14 @@ export function CheckoutForm() {
         <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             href="/packages"
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand transition hover:bg-nile-deep"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/30 active:scale-[0.98]"
           >
             Browse packages
             <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
             href="/cart"
-            className="inline-flex min-h-11 items-center justify-center rounded-full border border-nile-ink/15 px-6 py-3 text-sm font-semibold text-nile-ink transition hover:border-nile hover:text-nile"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-nile-ink/15 px-6 py-3 text-sm font-semibold text-nile-ink transition-all duration-200 hover:scale-[1.02] hover:border-nile hover:bg-nile/5 hover:text-nile active:scale-[0.98]"
           >
             View cart
           </Link>
@@ -166,7 +168,7 @@ export function CheckoutForm() {
               autoComplete="name"
               aria-invalid={Boolean(fieldErrors.name)}
               aria-describedby={fieldErrors.name ? "name-error" : undefined}
-              className={`mt-1.5 w-full rounded-xl border bg-sand px-4 py-3 text-base text-nile-ink outline-none transition focus:ring-2 sm:text-sm ${
+              className={`mt-1.5 w-full rounded-xl border bg-sand px-4 py-3 text-base text-nile-ink outline-none transition duration-150 focus:ring-2 sm:text-sm ${
                 fieldErrors.name
                   ? "border-terracotta focus:border-terracotta focus:ring-terracotta/20"
                   : "border-nile-ink/15 focus:border-nile focus:ring-nile/20"
@@ -195,7 +197,7 @@ export function CheckoutForm() {
               autoComplete="email"
               aria-invalid={Boolean(fieldErrors.email)}
               aria-describedby={fieldErrors.email ? "email-error" : undefined}
-              className={`mt-1.5 w-full rounded-xl border bg-sand px-4 py-3 text-base text-nile-ink outline-none transition focus:ring-2 sm:text-sm ${
+              className={`mt-1.5 w-full rounded-xl border bg-sand px-4 py-3 text-base text-nile-ink outline-none transition duration-150 focus:ring-2 sm:text-sm ${
                 fieldErrors.email
                   ? "border-terracotta focus:border-terracotta focus:ring-terracotta/20"
                   : "border-nile-ink/15 focus:border-nile focus:ring-nile/20"
@@ -222,7 +224,7 @@ export function CheckoutForm() {
         <button
           type="submit"
           disabled={paying}
-          className="mt-8 flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-nile py-3.5 text-sm font-semibold text-sand transition hover:bg-nile-deep disabled:cursor-not-allowed disabled:opacity-70"
+          className="mt-8 flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-nile py-3.5 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.02] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
         >
           {paying ? (
             <>

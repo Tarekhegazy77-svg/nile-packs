@@ -31,14 +31,14 @@ export default function HomePage() {
           <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap">
             <Link
               href="/packages"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-lg shadow-nile/20 transition hover:bg-nile-deep"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-lg shadow-nile/25 transition-all duration-200 hover:scale-[1.04] hover:bg-nile-deep hover:shadow-xl hover:shadow-nile/40 active:scale-[0.98]"
             >
               Browse catalog
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
             <Link
               href="/packages/all-access-bundle"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-nile-ink/15 bg-white/70 px-6 py-3 text-sm font-semibold text-nile-ink backdrop-blur transition hover:border-nile hover:text-nile"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-nile-ink/15 bg-white/70 px-6 py-3 text-sm font-semibold text-nile-ink backdrop-blur transition-all duration-200 hover:scale-[1.03] hover:border-nile hover:bg-nile/5 hover:text-nile hover:shadow-md active:scale-[0.98]"
             >
               All-Access Bundle
             </Link>
@@ -91,7 +91,7 @@ export default function HomePage() {
           </div>
           <Link
             href="/packages"
-            className="inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-nile hover:underline"
+            className="inline-flex min-h-10 items-center gap-1 rounded-full px-2 text-sm font-semibold text-nile transition-all duration-150 hover:bg-nile/10 hover:underline hover:decoration-nile/40 hover:underline-offset-4"
           >
             View all <ArrowRight className="h-4 w-4" />
           </Link>
