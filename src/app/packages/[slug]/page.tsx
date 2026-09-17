@@ -5,7 +5,7 @@ import { Check, ArrowLeft } from "lucide-react";
 import { getProductBySlug, products } from "@/lib/products";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { AddToCartButton } from "@/components/AddToCartButton";
-import { savingsAmount } from "@/lib/discount";
+import { savingsAmount, discountPercentLabel } from "@/lib/discount";
 import { formatLE } from "@/lib/format";
 
 type Props = {
@@ -32,9 +32,10 @@ export default async function PackageDetailPage({ params }: Props) {
   if (!product) notFound();
 
   const saved = savingsAmount(product.priceLE);
+  const off = discountPercentLabel();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-14">
       <Link
         href="/packages"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-nile-muted transition hover:text-nile"
@@ -64,7 +65,7 @@ export default async function PackageDetailPage({ params }: Props) {
         <div>
           <PriceDisplay priceLE={product.priceLE} size="lg" />
           <p className="mt-2 text-sm font-medium text-teal">
-            You save {formatLE(saved)} on this package
+            You save {formatLE(saved)} · {off} off applied automatically
           </p>
           <p className="mt-5 text-base leading-relaxed text-nile-muted">
             {product.description}
@@ -89,15 +90,15 @@ export default async function PackageDetailPage({ params }: Props) {
             </ul>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <AddToCartButton
               productId={product.id}
               label="Add to cart"
-              className="px-8 py-3"
+              className="min-h-11 w-full justify-center px-8 py-3 sm:w-auto"
             />
             <Link
               href="/cart"
-              className="inline-flex items-center rounded-full border border-nile-ink/15 px-5 py-3 text-sm font-semibold text-nile-ink hover:border-nile hover:text-nile"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-nile-ink/15 px-5 py-3 text-sm font-semibold text-nile-ink hover:border-nile hover:text-nile sm:w-auto"
             >
               View cart
             </Link>

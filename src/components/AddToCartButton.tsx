@@ -28,7 +28,7 @@ export function AddToCartButton({
     <button
       type="button"
       onClick={handleClick}
-      className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nile ${
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nile ${
         justAdded
           ? "bg-teal text-white shadow-md"
           : "bg-nile text-sand hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/25 active:scale-[0.98]"
@@ -41,8 +41,8 @@ export function AddToCartButton({
         </>
       ) : (
         <>
-          <ShoppingBag className="h-4 w-4" strokeWidth={2} />
-          {label}
+          <ShoppingBag className="h-4 w-4 shrink-0" strokeWidth={2} />
+          <span className="truncate">{label}</span>
         </>
       )}
     </button>

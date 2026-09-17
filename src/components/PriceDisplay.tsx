@@ -1,4 +1,4 @@
-import { discountedPrice } from "@/lib/discount";
+import { discountedPrice, discountPercentLabel } from "@/lib/discount";
 import { formatLE } from "@/lib/format";
 
 type Props = {
@@ -18,7 +18,9 @@ export function PriceDisplay({ priceLE, size = "md", className = "" }: Props) {
   const sizes = sizeClasses[size];
 
   return (
-    <div className={`flex flex-wrap items-baseline gap-x-2 gap-y-0.5 ${className}`}>
+    <div
+      className={`flex flex-wrap items-baseline gap-x-2 gap-y-0.5 ${className}`}
+    >
       <span className={`text-nile-ink ${sizes.sale}`}>{formatLE(sale)}</span>
       <span
         className={`text-nile-muted line-through decoration-nile-muted/60 ${sizes.original}`}
@@ -26,7 +28,7 @@ export function PriceDisplay({ priceLE, size = "md", className = "" }: Props) {
         {formatLE(priceLE)}
       </span>
       <span className="rounded-full bg-saffron/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-terracotta">
-        −40%
+        −{discountPercentLabel()}
       </span>
     </div>
   );

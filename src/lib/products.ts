@@ -14,7 +14,7 @@ export const products: Product[] = [
     slug: "starter-pack",
     name: "Starter Pack",
     description:
-      "Everything you need to launch a polished digital product in an afternoon. Core template plus a guided quick-start PDF so you skip the blank-page panic.",
+      "Launch a polished digital product in an afternoon — core template plus a quick-start PDF so you skip the blank page.",
     includes: ["Core template", "Quick-start PDF"],
     priceLE: 19.99,
     featured: true,
@@ -24,9 +24,9 @@ export const products: Product[] = [
     slug: "pro-pack",
     name: "Pro Pack",
     description:
-      "Level up from starter with a curated icon set, presentation mockups, and a launch checklist used by working freelancers.",
+      "Starter Pack plus a curated icon set, presentation mockups, and a launch checklist freelancers actually use.",
     includes: [
-      "Starter Pack contents",
+      "Everything in Starter Pack",
       "Icon set",
       "Presentation mockups",
       "Launch checklist",
@@ -39,9 +39,9 @@ export const products: Product[] = [
     slug: "agency-bundle",
     name: "Agency Bundle",
     description:
-      "Built for studios shipping client work at pace. Pro assets plus a full brand kit and an extended commercial license.",
+      "Built for studios shipping client work fast — Pro Pack assets, a full brand kit, and an extended commercial license.",
     includes: [
-      "Pro Pack contents",
+      "Everything in Pro Pack",
       "Brand kit",
       "Extended commercial license",
     ],
@@ -53,7 +53,7 @@ export const products: Product[] = [
     slug: "launch-kit",
     name: "Launch Kit",
     description:
-      "Ship a landing page and nurture sequence without starting from zero. High-converting templates paired with ready-to-adapt email copy.",
+      "Ship a landing page and nurture sequence without starting from scratch — high-converting templates plus ready email copy.",
     includes: ["Landing page templates", "Email copy pack"],
     priceLE: 79.99,
     featured: false,
@@ -63,7 +63,7 @@ export const products: Product[] = [
     slug: "creator-assets",
     name: "Creator Assets",
     description:
-      "Social-first visuals for creators who post daily. Templates and cover sets that stay on-brand across platforms.",
+      "Social-first visuals for creators who post daily — templates and cover sets that stay on-brand across platforms.",
     includes: ["Social media templates", "Cover set"],
     priceLE: 29.99,
     featured: false,
