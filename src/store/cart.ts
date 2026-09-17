@@ -27,12 +27,10 @@ type CartState = {
   setHasHydrated: (value: boolean) => void;
 };
 
-/** Sum of quantities across cart lines. */
 export function getCartTotalItems(items: CartItem[]): number {
   return items.reduce((sum, i) => sum + i.quantity, 0);
 }
 
-/** Resolve cart items into display lines via product catalog. */
 export function getCartLineItems(items: CartItem[]): CartLine[] {
   return items
     .map((i) => {
@@ -107,14 +105,19 @@ export const useCartStore = create<CartState>()(
       setHasHydrated: (value) => set({ hasHydrated: value }),
     }),
     {
-      name: "packages-store-cart",
+      name: "nile-packs-cart-v2",
       partialize: (s) => ({ items: s.items }),
-      onRehydrateStorage: () => (state, error) => {
-        if (error) {
-          console.warn("cart rehydrate error", error);
-        }
-        state?.setHasHydrated(true);
-      },
     }
   )
 );
+
+// Mark hydrated after persist finishes (avoids TDZ / init races)
+if (typeof window !== "undefined") {
+  useCartStore.persist.onFinishHydration(() => {
+    useCartStore.setState({ hasHydrated: true });
+  });
+  // If already hydrated (fast path)
+  if (useCartStore.persist.hasHydrated()) {
+    useCartStore.setState({ hasHydrated: true });
+  }
+}
