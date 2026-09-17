@@ -16,7 +16,7 @@ export const products: Product[] = [
     description:
       "Launch a polished digital product in an afternoon — core template plus a quick-start PDF so you skip the blank page.",
     includes: ["Core template", "Quick-start PDF"],
-    priceLE: 1999,
+    priceLE: 749.99,
     featured: true,
   },
   {
@@ -31,7 +31,7 @@ export const products: Product[] = [
       "Presentation mockups",
       "Launch checklist",
     ],
-    priceLE: 3999,
+    priceLE: 1949.99,
     featured: true,
   },
   {
@@ -45,7 +45,7 @@ export const products: Product[] = [
       "Brand kit",
       "Extended commercial license",
     ],
-    priceLE: 7999,
+    priceLE: 7449.99,
     featured: true,
   },
   {
@@ -55,7 +55,7 @@ export const products: Product[] = [
     description:
       "Ship a landing page and nurture sequence without starting from scratch — high-converting templates plus ready email copy.",
     includes: ["Landing page templates", "Email copy pack"],
-    priceLE: 4999,
+    priceLE: 1849.99,
     featured: false,
   },
   {
@@ -65,7 +65,7 @@ export const products: Product[] = [
     description:
       "Social-first visuals for creators who post daily — templates and cover sets that stay on-brand across platforms.",
     includes: ["Social media templates", "Cover set"],
-    priceLE: 2499,
+    priceLE: 1449.99,
     featured: false,
   },
   {
@@ -82,7 +82,7 @@ export const products: Product[] = [
       "Creator Assets",
       "Lifetime updates",
     ],
-    priceLE: 12999,
+    priceLE: 9949.99,
     featured: true,
   },
 ];
