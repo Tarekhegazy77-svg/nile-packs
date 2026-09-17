@@ -58,14 +58,14 @@ export function CheckoutForm() {
         <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             href="/packages"
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/30 active:scale-[0.98]"
+            className="btn-shine focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/35 active:scale-[0.98]"
           >
             Browse packages
             <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
             href="/cart"
-            className="inline-flex min-h-11 items-center justify-center rounded-full border border-nile-ink/15 px-6 py-3 text-sm font-semibold text-nile-ink transition-all duration-200 hover:scale-[1.02] hover:border-nile hover:bg-nile/5 hover:text-nile active:scale-[0.98]"
+            className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-nile-ink/15 px-6 py-3 text-sm font-semibold text-nile-ink transition-all duration-200 hover:scale-[1.02] hover:border-nile hover:bg-nile/5 hover:text-nile hover:shadow-sm active:scale-[0.98]"
           >
             View cart
           </Link>
@@ -222,7 +222,7 @@ export function CheckoutForm() {
         <button
           type="submit"
           disabled={paying}
-          className="mt-8 flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-nile py-3.5 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.02] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
+          className="btn-shine focus-ring mt-8 flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-nile py-3.5 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.02] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/35 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
         >
           {paying ? (
             <>

@@ -31,10 +31,10 @@ export function AddToCartButton({
       type="button"
       onClick={handleClick}
       data-testid={`add-to-cart-${productId}`}
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold shadow-sm transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nile ${
+      className={`btn-shine focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold shadow-sm transition-all duration-200 ${
         justAdded
-          ? "scale-[1.02] bg-teal text-white shadow-md shadow-teal/30"
-          : "bg-nile text-sand hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/30 active:scale-[0.97]"
+          ? "scale-[1.02] bg-teal text-white shadow-md shadow-teal/35 ring-1 ring-teal/20"
+          : "bg-nile text-sand hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/40 active:scale-[0.97]"
       } ${className}`}
     >
       {justAdded ? (

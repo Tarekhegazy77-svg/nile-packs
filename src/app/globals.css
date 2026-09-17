@@ -42,6 +42,240 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
 }
 
+/* ─── Motion utilities ─── */
+
+@keyframes ambient-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.85;
+  }
+  40% {
+    transform: translate(6%, -4%) scale(1.06);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(-4%, 5%) scale(0.96);
+    opacity: 0.75;
+  }
+}
+
+@keyframes ambient-drift-alt {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-5%, 6%) scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes soft-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes shine-sweep {
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateX(220%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
+@keyframes logo-pulse {
+  0%,
+  100% {
+    box-shadow: 0 1px 2px rgb(30 77 107 / 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px rgb(30 77 107 / 0.12),
+      0 4px 14px rgb(30 77 107 / 0.35);
+  }
+}
+
+@keyframes media-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.animate-ambient {
+  animation: ambient-drift 14s ease-in-out infinite;
+}
+
+.animate-ambient-alt {
+  animation: ambient-drift-alt 18s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: soft-shimmer 8s linear infinite;
+}
+
+/* Soft card lift + colored glow on hover */
+.card-lift {
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-6px);
+  border-color: rgb(30 77 107 / 0.28);
+  box-shadow:
+    0 12px 28px -8px rgb(30 77 107 / 0.28),
+    0 4px 10px -4px rgb(13 138 124 / 0.12),
+    0 0 0 1px rgb(30 77 107 / 0.06);
+}
+
+.card-lift:active {
+  transform: translateY(-2px);
+}
+
+/* Primary / secondary button shine (pseudo-element sweep) */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  left: 0;
+  width: 45%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgb(255 255 255 / 0.22) 45%,
+    transparent 70%
+  );
+  transform: translateX(-120%) skewX(-18deg);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.btn-shine:hover::after,
+.btn-shine:focus-visible::after {
+  animation: shine-sweep 0.75s ease-out;
+}
+
+.btn-shine > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Nav link: animated underline */
+.nav-underline {
+  position: relative;
+}
+
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.45rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--nile);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-underline:hover::after,
+.nav-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Logo mark soft pulse on parent hover */
+.logo-mark {
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.group:hover .logo-mark,
+.group:focus-visible .logo-mark {
+  animation: logo-pulse 1.6s ease-in-out infinite;
+}
+
+/* Footer / text link polish */
+.link-soft {
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease,
+    text-underline-offset 0.2s ease;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+}
+
+.link-soft:hover,
+.link-soft:focus-visible {
+  text-decoration-line: underline;
+  text-underline-offset: 5px;
+  text-decoration-color: currentColor;
+}
+
+/* Cart / list row hover */
+.row-hover {
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.row-hover:hover {
+  border-color: rgb(30 77 107 / 0.18);
+  box-shadow:
+    0 8px 20px -10px rgb(30 77 107 / 0.18),
+    0 0 0 1px rgb(30 77 107 / 0.04);
+  background-color: rgb(255 255 255 / 1);
+}
+
+/* Feature / benefit tiles */
+.feature-tile {
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.feature-tile:hover {
+  transform: translateY(-3px);
+  border-color: rgb(30 77 107 / 0.16);
+  box-shadow: 0 10px 24px -12px rgb(30 77 107 / 0.2);
+}
+
+/* Clear focus-visible rings (buttons/links that opt in) */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--nile);
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -55,5 +289,31 @@ body {
   .group:hover,
   .group:hover * {
     transform: none !important;
+  }
+
+  .card-lift:hover,
+  .card-lift:active,
+  .feature-tile:hover,
+  .row-hover:hover {
+    transform: none !important;
+  }
+
+  .btn-shine::after {
+    display: none !important;
+  }
+
+  .animate-ambient,
+  .animate-ambient-alt,
+  .animate-shimmer {
+    animation: none !important;
+  }
+
+  .group:hover .logo-mark,
+  .group:focus-visible .logo-mark {
+    animation: none !important;
+  }
+
+  .nav-underline::after {
+    transition: none !important;
   }
 }

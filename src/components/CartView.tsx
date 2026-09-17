@@ -45,7 +45,7 @@ export function CartView() {
         </p>
         <Link
           href="/packages"
-          className="mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/30 active:scale-[0.98]"
+          className="btn-shine focus-ring mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/35 active:scale-[0.98]"
         >
           Browse packages
           <ArrowRight className="h-4 w-4" />
@@ -60,12 +60,12 @@ export function CartView() {
         {lines.map(({ product, quantity, lineDiscounted }) => (
           <li
             key={product.id}
-            className="flex flex-col gap-4 rounded-2xl border border-nile-ink/8 bg-white p-4 shadow-sm transition-shadow duration-200 hover:shadow-md sm:flex-row sm:items-center sm:p-5"
+            className="row-hover flex flex-col gap-4 rounded-2xl border border-nile-ink/8 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:p-5"
           >
             <div className="min-w-0 flex-1">
               <Link
                 href={`/packages/${product.slug}`}
-                className="font-display text-lg font-semibold text-nile-ink transition-colors duration-150 hover:text-nile"
+                className="link-soft font-display text-lg font-semibold text-nile-ink hover:text-nile"
               >
                 {product.name}
               </Link>
@@ -135,7 +135,7 @@ export function CartView() {
         </p>
         <Link
           href="/checkout"
-          className="mt-6 flex min-h-11 w-full items-center justify-center rounded-full bg-nile py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.02] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/30 active:scale-[0.98]"
+          className="btn-shine focus-ring mt-6 flex min-h-11 w-full items-center justify-center rounded-full bg-nile py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.02] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/35 active:scale-[0.98]"
         >
           Proceed to checkout
         </Link>

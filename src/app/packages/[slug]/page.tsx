@@ -38,15 +38,15 @@ export default async function PackageDetailPage({ params }: Props) {
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-14">
       <Link
         href="/packages"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-nile-muted transition hover:text-nile"
+        className="link-soft focus-ring group inline-flex items-center gap-1.5 rounded-md text-sm font-medium text-nile-muted hover:text-nile"
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
         Back to catalog
       </Link>
 
       <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:items-start">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nile via-nile-deep to-teal p-8 text-sand shadow-xl shadow-nile/20 sm:min-h-[360px] sm:p-10">
-          <div className="absolute inset-0 opacity-40 [background-image:radial-gradient(circle_at_30%_20%,white_0,transparent_45%),radial-gradient(circle_at_90%_80%,#e8b84a_0,transparent_40%)]" />
+        <div className="group/media relative overflow-hidden rounded-3xl bg-gradient-to-br from-nile via-nile-deep to-teal p-8 text-sand shadow-xl shadow-nile/20 transition-shadow duration-300 hover:shadow-2xl hover:shadow-nile/30 sm:min-h-[360px] sm:p-10">
+          <div className="absolute inset-0 scale-100 opacity-40 transition-transform duration-700 ease-out group-hover/media:scale-110 [background-image:radial-gradient(circle_at_30%_20%,white_0,transparent_45%),radial-gradient(circle_at_90%_80%,#e8b84a_0,transparent_40%)]" />
           <div className="relative flex h-full flex-col justify-between gap-12">
             <div>
               <span className="rounded-full bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] backdrop-blur">
@@ -98,7 +98,7 @@ export default async function PackageDetailPage({ params }: Props) {
             />
             <Link
               href="/cart"
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-nile-ink/15 px-5 py-3 text-sm font-semibold text-nile-ink transition-all duration-200 hover:scale-[1.03] hover:border-nile hover:bg-nile/5 hover:text-nile active:scale-[0.98] sm:w-auto"
+              className="focus-ring inline-flex min-h-11 w-full items-center justify-center rounded-full border border-nile-ink/15 px-5 py-3 text-sm font-semibold text-nile-ink transition-all duration-200 hover:scale-[1.03] hover:border-nile hover:bg-nile/5 hover:text-nile hover:shadow-sm active:scale-[0.98] sm:w-auto"
             >
               View cart
             </Link>

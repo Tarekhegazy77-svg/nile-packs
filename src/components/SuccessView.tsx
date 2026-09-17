@@ -58,7 +58,7 @@ export function SuccessView() {
         </p>
         <Link
           href="/packages"
-          className="mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand transition hover:bg-nile-deep"
+          className="btn-shine focus-ring mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/35 active:scale-[0.98]"
         >
           Browse packages
           <ArrowRight className="h-4 w-4" />
@@ -100,7 +100,7 @@ export function SuccessView() {
           {order.items.map((item) => (
             <li
               key={item.id}
-              className="flex flex-col gap-3 rounded-xl border border-nile-ink/8 bg-sand/60 p-4 sm:flex-row sm:items-center sm:justify-between"
+              className="row-hover flex flex-col gap-3 rounded-xl border border-nile-ink/8 bg-sand/60 p-4 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="min-w-0">
                 <p className="font-semibold text-nile-ink">{item.name}</p>
@@ -115,7 +115,7 @@ export function SuccessView() {
                     `Demo stub: "${item.name}" would download here.\nFile: ${item.slug}.zip`
                   );
                 }}
-                className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-nile px-4 py-2.5 text-sm font-semibold text-sand transition hover:bg-nile-deep sm:w-auto"
+                className="btn-shine focus-ring inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-nile px-4 py-2.5 text-sm font-semibold text-sand shadow-sm shadow-nile/20 transition-all duration-200 hover:scale-[1.03] hover:bg-nile-deep hover:shadow-md hover:shadow-nile/35 active:scale-[0.98] sm:w-auto"
               >
                 <Download className="h-4 w-4" />
                 Download .zip
@@ -128,14 +128,14 @@ export function SuccessView() {
       <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-center">
         <Link
           href="/packages"
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand transition hover:bg-nile-deep"
+          className="btn-shine focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/35 active:scale-[0.98]"
         >
           Continue shopping
           <ArrowRight className="h-4 w-4" />
         </Link>
         <Link
           href="/"
-          className="text-sm font-medium text-nile hover:underline"
+          className="link-soft text-sm font-medium text-nile"
         >
           Back to home
         </Link>
