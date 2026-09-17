@@ -1,11 +1,26 @@
-/** Public Paymob Worker base URL. Empty → demo checkout mode. */
+/**
+ * Paymob helpers for Nile Packs.
+ *
+ * Live charging is OFF unless BOTH are set at build time:
+ *   NEXT_PUBLIC_PAYMOB_API_BASE  — Cloudflare Worker URL
+ *   NEXT_PUBLIC_PAYMOB_LIVE=true — explicit opt-in
+ *
+ * Storefront default: Paymob-branded UI, no network calls, no charges.
+ */
+
+/** Public Paymob Worker base URL. */
 export function getPaymobApiBase(): string {
   const raw = (process.env.NEXT_PUBLIC_PAYMOB_API_BASE || "").trim();
   return raw.replace(/\/$/, "");
 }
 
+/** True only when Worker URL is set AND live charging is explicitly enabled. */
 export function isPaymobLive(): boolean {
-  return getPaymobApiBase().length > 0;
+  const liveFlag = (process.env.NEXT_PUBLIC_PAYMOB_LIVE || "")
+    .trim()
+    .toLowerCase();
+  const enabled = liveFlag === "true" || liveFlag === "1" || liveFlag === "yes";
+  return enabled && getPaymobApiBase().length > 0;
 }
 
 export type CheckoutRequest = {
@@ -48,6 +63,7 @@ export type OrderStatusResponse = {
   error?: string;
 };
 
+/** Calls Worker /checkout — only use when isPaymobLive() is true. */
 export async function createPaymobCheckout(
   payload: CheckoutRequest
 ): Promise<CheckoutResponse> {
