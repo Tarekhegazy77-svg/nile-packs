@@ -183,39 +183,24 @@ export function CheckoutForm() {
         noValidate
         className="rounded-2xl border border-nile-ink/8 bg-white p-5 shadow-sm sm:p-8"
       >
-        {!live && (
-          <div className="flex items-start gap-3 rounded-xl border border-saffron/40 bg-saffron/10 px-3.5 py-3 text-sm text-nile-ink sm:px-4">
-            <Info className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
-            <div>
-              <p className="font-semibold">Demo payment — no real charge</p>
-              <p className="mt-0.5 text-nile-muted">
-                Set <code className="text-xs">NEXT_PUBLIC_PAYMOB_API_BASE</code>{" "}
-                to your Cloudflare Worker URL to enable live Paymob checkout.
-              </p>
-            </div>
+        <div className="flex items-start gap-3 rounded-xl border border-nile/25 bg-nile/5 px-3.5 py-3 text-sm text-nile-ink sm:px-4">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-nile" />
+          <div>
+            <p className="font-semibold">Paymob · Egyptian pounds</p>
+            <p className="mt-0.5 text-nile-muted">
+              {live
+                ? "You will be redirected to Paymob Unified Checkout. Card details never touch this site."
+                : "Paymob is wired on this checkout. Payments are not charging yet — completing the form only runs a local preview confirmation."}
+            </p>
           </div>
-        )}
+        </div>
 
-        {live && (
-          <div className="flex items-start gap-3 rounded-xl border border-teal/30 bg-teal/10 px-3.5 py-3 text-sm text-nile-ink sm:px-4">
-            <Info className="mt-0.5 h-4 w-4 shrink-0 text-teal" />
-            <div>
-              <p className="font-semibold">Secure Paymob checkout</p>
-              <p className="mt-0.5 text-nile-muted">
-                You will be redirected to Paymob to pay in EGP. Card details
-                never touch this site.
-              </p>
-            </div>
-          </div>
-        )}
 
         <h2 className="mt-6 font-display text-2xl font-semibold text-nile-ink">
           Your details
         </h2>
         <p className="mt-1 text-sm text-nile-muted">
-          {live
-            ? "Used for your receipt and Paymob billing."
-            : "We only use these for the demo confirmation screen."}
+          Used for your receipt and Paymob billing when payments go live.
         </p>
 
         <div className="mt-6 space-y-4">
@@ -333,14 +318,14 @@ export function CheckoutForm() {
               <CreditCard className="h-4 w-4" />
               {live
                 ? `Pay ${formatLE(total)} with Paymob`
-                : `Pay ${formatLE(total)} · demo only`}
+                : `Preview ${formatLE(total)} · no charge`}
             </>
           )}
         </button>
         <p className="mt-3 text-center text-xs leading-relaxed text-nile-muted">
           {live
             ? "You will leave this site briefly to complete payment on Paymob’s secure page."
-            : "By continuing you acknowledge this is a local demo — no card details are collected."}
+            : "Preview only — no card details are collected and nothing is charged."}
         </p>
       </form>
 

@@ -16,9 +16,7 @@ export default function CheckoutPage() {
         Checkout
       </h1>
       <p className="mt-2 text-sm text-nile-muted sm:text-base">
-        {live
-          ? "Pay securely with Paymob in Egyptian pounds. Sale totals already include 40% off."
-          : "Demo payment only — sale totals in LE are simulated until Paymob is configured."}
+        Paymob checkout is on this page (EGP, 40% off applied). Live card charges stay off until you enable the Worker with keys.
       </p>
       <div className="mt-6 sm:mt-8">
         <CheckoutForm />
