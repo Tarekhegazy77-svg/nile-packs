@@ -124,3 +124,26 @@ order (see Paymob docs). HMAC comes from `?hmac=` (or body `hmac`). Orders are
 - Phone is required by Paymob billing.
 - Charge amount = cart `subtotalDiscounted` (already 40% off) in EGP cents.
 - Do not invent or commit real Paymob keys.
+
+
+## GitHub Pages build env (manual)
+
+The Actions workflow that sets `NEXT_PUBLIC_PAYMOB_API_BASE` could not be
+pushed from this environment (GitHub OAuth lacks the `workflow` scope).
+
+After the Worker is deployed, Tarek should either:
+
+1. Add repo secret `NEXT_PUBLIC_PAYMOB_API_BASE` = Worker URL, and ensure
+   `.github/workflows/pages.yml` build step includes:
+
+```yaml
+- name: Build
+  env:
+    NEXT_PUBLIC_PAYMOB_API_BASE: ${{ secrets.NEXT_PUBLIC_PAYMOB_API_BASE }}
+  run: npm run build
+```
+
+2. Or commit the local `.github/workflows/pages.yml` from a machine/token that
+   has the `workflow` scope.
+
+Until that secret is set, the live Pages site stays in **demo checkout** mode.
