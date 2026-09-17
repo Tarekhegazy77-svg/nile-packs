@@ -7,6 +7,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import { discountedPrice } from "@/lib/discount";
@@ -52,9 +53,15 @@ function buildLines(items: CartItem[]): CartLine[] {
     .filter((x): x is CartLine => x !== null);
 }
 
+function subscribe() {
+  return () => {};
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
+  // true only on client — avoids depending on useEffect for "ready"
+  const isClient = useSyncExternalStore(subscribe, () => true, () => false);
   const [items, setItems] = useState<CartItem[]>([]);
-  const [ready, setReady] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     try {
@@ -64,19 +71,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
         if (Array.isArray(parsed)) setItems(parsed);
       }
     } catch {
-      // ignore bad storage
+      // ignore
     }
-    setReady(true);
+    setLoaded(true);
   }, []);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!loaded) return;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
     } catch {
-      // ignore quota
+      // ignore
     }
-  }, [items, ready]);
+  }, [items, loaded]);
 
   const addItem = useCallback((productId: string, qty = 1) => {
     setItems((prev) => {
@@ -106,6 +113,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const clearCart = useCallback(() => setItems([]), []);
+
+  const ready = isClient; // interactive as soon as we're on the client
 
   const value = useMemo<CartContextValue>(() => {
     const lines = buildLines(items);
