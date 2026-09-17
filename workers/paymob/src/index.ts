@@ -1,15 +1,25 @@
 /**
- * Nile Packs — Paymob Intention API Cloudflare Worker
+ * Nile Packs API — Paymob + Admin Cloudflare Worker (nile-packs-api)
  *
- * Routes:
+ * Paymob:
  *   POST /checkout          — create Intention, return { checkoutUrl, merchantOrderId }
  *   POST /webhook           — verify HMAC, record payment in KV (ORDERS)
  *   GET  /order/:id         — payment status for success page
+ * Admin:
+ *   POST /admin/login|logout, GET /admin/me
+ *   GET|POST /admin/users, PATCH /admin/users/:id
+ *   GET /admin/products, PATCH /admin/products/:id
+ *   GET /admin/orders|stats, PATCH /admin/orders/:id
+ * Public:
+ *   GET /api/catalog
  *   OPTIONS *               — CORS preflight
  */
 
+import { handleAdminRoute } from "./admin";
+
 export interface Env {
   ORDERS: KVNamespace;
+  ADMIN: KVNamespace;
   PAYMOB_SECRET_KEY: string;
   PAYMOB_PUBLIC_KEY: string;
   PAYMOB_HMAC_SECRET: string;
@@ -17,6 +27,10 @@ export interface Env {
   PAYMOB_INTEGRATION_ID_CARD: string;
   /** Storefront origin, e.g. https://tarekhegazy77-svg.github.io/nile-packs */
   APP_URL: string;
+  /** Owner bootstrap secrets (wrangler secret put) */
+  ADMIN_OWNER_EMAIL?: string;
+  ADMIN_OWNER_PASSWORD?: string;
+  SESSION_SECRET?: string;
 }
 
 type CartLineIn = {
@@ -38,7 +52,7 @@ type CheckoutBody = {
 
 type OrderRecord = {
   merchantOrderId: string;
-  status: "pending" | "paid" | "failed";
+  status: "pending" | "paid" | "failed" | "fulfilled" | "cancelled";
   amountCents: number;
   currency: "EGP";
   name: string;
@@ -108,8 +122,19 @@ export default {
         );
       }
       if (request.method === "GET" && url.pathname === "/health") {
-        return withCors(json({ ok: true, service: "nile-packs-paymob" }), cors);
+        return withCors(json({ ok: true, service: "nile-packs-api" }), cors);
       }
+
+      const adminRes = await handleAdminRoute(
+        request,
+        env,
+        url.pathname,
+        json
+      );
+      if (adminRes) {
+        return withCors(adminRes, cors);
+      }
+
       return withCors(json({ error: "Not found" }, 404), cors);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Internal error";
@@ -143,7 +168,7 @@ function corsHeaders(request: Request, env: Env): HeadersInit {
 
   return {
     "Access-Control-Allow-Origin": allow,
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, PATCH, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Max-Age": "86400",
     Vary: "Origin",

@@ -1,14 +1,16 @@
-# Nile Packs — Paymob Intention API Worker
-# Docs: ../../PAYMOB.md
+# Nile Packs API — Paymob + Admin (unified worker)
+# Docs: ../../ADMIN.md  ../../PAYMOB.md
 #
 # Secrets (set via `wrangler secret put <NAME>` — do NOT commit real values):
 #   PAYMOB_SECRET_KEY
 #   PAYMOB_HMAC_SECRET
+#   ADMIN_OWNER_EMAIL
+#   ADMIN_OWNER_PASSWORD
+#   SESSION_SECRET
 #
-# Plain vars below are placeholders — replace before deploy, or override with
-# `wrangler secret` / dashboard for anything sensitive.
+# Plain vars below are placeholders — replace before deploy.
 
-name = "nile-packs-paymob"
+name = "nile-packs-api"
 main = "src/index.ts"
 compatibility_date = "2024-11-01"
 compatibility_flags = ["nodejs_compat"]
@@ -19,12 +21,19 @@ PAYMOB_PUBLIC_KEY = "pk_test_REPLACE_ME"
 PAYMOB_INTEGRATION_ID_CARD = "0"
 APP_URL = "https://tarekhegazy77-svg.github.io/nile-packs"
 
-# KV namespace for order status (binding name MUST be ORDERS).
+# KV: ORDERS (Paymob order status) + ADMIN (users/sessions/products)
 # Create with:
 #   npx wrangler kv namespace create ORDERS
 #   npx wrangler kv namespace create ORDERS --preview
+#   npx wrangler kv namespace create ADMIN
+#   npx wrangler kv namespace create ADMIN --preview
 # Then paste the ids below.
 [[kv_namespaces]]
 binding = "ORDERS"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
-preview_id = "REPLACE_WITH_KV_PREVIEW_NAMESPACE_ID"
+id = "REPLACE_WITH_ORDERS_KV_NAMESPACE_ID"
+preview_id = "REPLACE_WITH_ORDERS_KV_PREVIEW_NAMESPACE_ID"
+
+[[kv_namespaces]]
+binding = "ADMIN"
+id = "REPLACE_WITH_ADMIN_KV_NAMESPACE_ID"
+preview_id = "REPLACE_WITH_ADMIN_KV_PREVIEW_NAMESPACE_ID"

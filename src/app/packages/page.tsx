@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { products } from "@/lib/products";
-import { ProductCard } from "@/components/ProductCard";
+import { CatalogGrid } from "@/components/CatalogGrid";
 import { discountPercentLabel } from "@/lib/discount";
+import { products } from "@/lib/products";
 
 export const metadata: Metadata = {
   title: "Catalog",
@@ -25,10 +25,8 @@ export default function PackagesPage() {
           {off} off, applied automatically — no coupon).
         </p>
       </div>
-      <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+      <div className="mt-8 sm:mt-10">
+        <CatalogGrid mode="all" />
       </div>
     </div>
   );

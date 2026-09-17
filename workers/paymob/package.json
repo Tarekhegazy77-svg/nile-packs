@@ -1,5 +1,5 @@
 {
-  "name": "nile-packs-paymob-worker",
+  "name": "nile-packs-api-worker",
   "private": true,
   "version": "0.1.0",
   "scripts": {

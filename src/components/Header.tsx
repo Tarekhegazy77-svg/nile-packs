@@ -1,12 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ShoppingBag, Package } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
 export function Header() {
+  const pathname = usePathname();
   const { ready, totalItems } = useCart();
   const count = ready ? totalItems : 0;
+
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <header className="sticky top-0 z-50 border-b border-nile-ink/8 bg-sand/90 backdrop-blur-md">

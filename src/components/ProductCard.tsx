@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import type { Product } from "@/lib/products";
 import { PriceDisplay } from "./PriceDisplay";
 import { AddToCartButton } from "./AddToCartButton";
+import { useCatalogOptional } from "@/context/CatalogContext";
 
 const accents = [
   "from-nile/90 to-teal",
@@ -24,7 +27,19 @@ type Props = {
   product: Product;
 };
 
-export function ProductCard({ product }: Props) {
+export function ProductCard({ product: initial }: Props) {
+  const catalog = useCatalogOptional();
+  const live = catalog?.getById(initial.id);
+  const product = live
+    ? {
+        ...initial,
+        name: live.name,
+        priceLE: live.priceLE,
+        featured: live.featured,
+        description: live.description,
+      }
+    : initial;
+  const outOfStock = live != null && live.inStock === false;
   const accent = accentFor(product.id);
 
   return (
@@ -51,7 +66,7 @@ export function ProductCard({ product }: Props) {
           />
           <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 [box-shadow:inset_0_0_0_1px_rgb(255_255_255/0.2),inset_0_-40px_60px_-20px_rgb(0_0_0/0.25)]" />
           <span className="relative rounded-md bg-white/15 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-sm transition-colors duration-200 group-hover:bg-white/25">
-            Digital package
+            {outOfStock ? "Out of stock" : "Digital package"}
           </span>
         </div>
         <div className="space-y-2 px-4 pt-4 sm:px-5">

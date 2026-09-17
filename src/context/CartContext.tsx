@@ -12,6 +12,7 @@ import {
 } from "react";
 import { discountedPrice } from "@/lib/discount";
 import { getProductById, type Product } from "@/lib/products";
+import { useCatalogOptional } from "@/context/CatalogContext";
 
 export type CartItem = { productId: string; quantity: number };
 
@@ -38,10 +39,13 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "nile-packs-cart-v3";
 
-function buildLines(items: CartItem[]): CartLine[] {
+function buildLines(
+  items: CartItem[],
+  resolve: (id: string) => Product | undefined
+): CartLine[] {
   return items
     .map((i) => {
-      const product = getProductById(i.productId);
+      const product = resolve(i.productId);
       if (!product) return null;
       return {
         product,
@@ -60,8 +64,21 @@ function subscribe() {
 export function CartProvider({ children }: { children: ReactNode }) {
   // true only on client — avoids depending on useEffect for "ready"
   const isClient = useSyncExternalStore(subscribe, () => true, () => false);
+  const catalog = useCatalogOptional();
   const [items, setItems] = useState<CartItem[]>([]);
   const [loaded, setLoaded] = useState(false);
+
+  const resolveProduct = useCallback(
+    (id: string): Product | undefined => {
+      const live = catalog?.getById(id);
+      if (live) {
+        if (live.removed || live.inStock === false) return undefined;
+        return live;
+      }
+      return getProductById(id);
+    },
+    [catalog]
+  );
 
   useEffect(() => {
     try {
@@ -85,19 +102,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, loaded]);
 
-  const addItem = useCallback((productId: string, qty = 1) => {
-    setItems((prev) => {
-      const existing = prev.find((i) => i.productId === productId);
-      if (existing) {
-        return prev.map((i) =>
-          i.productId === productId
-            ? { ...i, quantity: i.quantity + qty }
-            : i
-        );
-      }
-      return [...prev, { productId, quantity: qty }];
-    });
-  }, []);
+  const addItem = useCallback(
+    (productId: string, qty = 1) => {
+      const product = resolveProduct(productId);
+      if (!product) return;
+      setItems((prev) => {
+        const existing = prev.find((i) => i.productId === productId);
+        if (existing) {
+          return prev.map((i) =>
+            i.productId === productId
+              ? { ...i, quantity: i.quantity + qty }
+              : i
+          );
+        }
+        return [...prev, { productId, quantity: qty }];
+      });
+    },
+    [resolveProduct]
+  );
 
   const removeItem = useCallback((productId: string) => {
     setItems((prev) => prev.filter((i) => i.productId !== productId));
@@ -117,7 +139,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const ready = isClient; // interactive as soon as we're on the client
 
   const value = useMemo<CartContextValue>(() => {
-    const lines = buildLines(items);
+    const lines = buildLines(items, resolveProduct);
     return {
       ready,
       items,
@@ -130,7 +152,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       subtotalOriginal: lines.reduce((s, l) => s + l.lineOriginal, 0),
       subtotalDiscounted: lines.reduce((s, l) => s + l.lineDiscounted, 0),
     };
-  }, [items, ready, addItem, removeItem, setQuantity, clearCart]);
+  }, [items, ready, addItem, removeItem, setQuantity, clearCart, resolveProduct]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

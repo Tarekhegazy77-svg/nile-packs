@@ -1,11 +1,9 @@
 import Link from "next/link";
 import { ArrowRight, Sparkles, Zap, Shield } from "lucide-react";
-import { getFeaturedProducts } from "@/lib/products";
-import { ProductCard } from "@/components/ProductCard";
+import { CatalogGrid } from "@/components/CatalogGrid";
 import { discountPercentLabel } from "@/lib/discount";
 
 export default function HomePage() {
-  const featured = getFeaturedProducts();
   const off = discountPercentLabel();
 
   return (
@@ -97,10 +95,8 @@ export default function HomePage() {
             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
         </div>
-        <div className="mt-6 grid gap-5 sm:mt-8 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-          {featured.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="mt-6 sm:mt-8">
+          <CatalogGrid mode="featured" />
         </div>
       </section>
     </>

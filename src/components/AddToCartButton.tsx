@@ -3,6 +3,7 @@
 import { useState, type MouseEvent } from "react";
 import { ShoppingBag, Check } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useCatalogOptional } from "@/context/CatalogContext";
 
 type Props = {
   productId: string;
@@ -16,14 +17,33 @@ export function AddToCartButton({
   label = "Add to cart",
 }: Props) {
   const { addItem } = useCart();
+  const catalog = useCatalogOptional();
   const [justAdded, setJustAdded] = useState(false);
+
+  const product = catalog?.getById(productId);
+  const outOfStock =
+    product != null && (product.removed || product.inStock === false);
 
   function handleClick(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     e.stopPropagation();
+    if (outOfStock) return;
     addItem(productId);
     setJustAdded(true);
     window.setTimeout(() => setJustAdded(false), 1400);
+  }
+
+  if (outOfStock) {
+    return (
+      <button
+        type="button"
+        disabled
+        data-testid={`out-of-stock-${productId}`}
+        className={`inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-nile-ink/10 px-5 py-2.5 text-sm font-semibold text-nile-muted ${className}`}
+      >
+        Out of stock
+      </button>
+    );
   }
 
   return (

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { Check, ArrowLeft } from "lucide-react";
 import { getProductBySlug, products } from "@/lib/products";
 import { PriceDisplay } from "@/components/PriceDisplay";
-import { AddToCartButton } from "@/components/AddToCartButton";
+import { StockAwareDetailActions } from "@/components/StockAwareDetailActions";
 import { savingsAmount, discountPercentLabel } from "@/lib/discount";
 import { formatLE } from "@/lib/format";
 
@@ -112,19 +112,7 @@ export default async function PackageDetailPage({ params }: Props) {
             </ul>
           </div>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <AddToCartButton
-              productId={product.id}
-              label="Add to cart"
-              className="min-h-11 w-full justify-center px-8 py-3 sm:w-auto"
-            />
-            <Link
-              href="/cart"
-              className="focus-ring inline-flex min-h-11 w-full items-center justify-center rounded-full border border-nile-ink/15 px-5 py-3 text-sm font-semibold text-nile-ink transition-all duration-200 hover:scale-[1.03] hover:border-nile hover:bg-nile/5 hover:text-nile hover:shadow-sm active:scale-[0.98] sm:w-auto"
-            >
-              View cart
-            </Link>
-          </div>
+          <StockAwareDetailActions productId={product.id} />
         </div>
       </div>
     </div>

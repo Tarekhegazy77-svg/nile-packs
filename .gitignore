@@ -48,3 +48,4 @@ preview-*.png
 # Cloudflare Wrangler
 .wrangler/
 workers/**/.wrangler/
+.secrets/
