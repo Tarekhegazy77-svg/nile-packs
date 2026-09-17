@@ -109,7 +109,10 @@ export const useCartStore = create<CartState>()(
     {
       name: "packages-store-cart",
       partialize: (s) => ({ items: s.items }),
-      onRehydrateStorage: () => (state) => {
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          console.warn("cart rehydrate error", error);
+        }
         state?.setHasHydrated(true);
       },
     }
