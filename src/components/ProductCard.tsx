@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Product } from "@/lib/products";
 import { PriceDisplay } from "./PriceDisplay";
 import { AddToCartButton } from "./AddToCartButton";
@@ -32,7 +33,22 @@ export function ProductCard({ product }: Props) {
         <div
           className={`relative flex h-32 items-end overflow-hidden bg-gradient-to-br sm:h-36 ${accent} p-4`}
         >
-          <div className="absolute inset-0 scale-100 opacity-30 mix-blend-overlay transition-transform duration-500 ease-out group-hover:scale-125 [background-image:radial-gradient(circle_at_20%_20%,white_0,transparent_40%),radial-gradient(circle_at_80%_60%,black_0,transparent_35%)]" />
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={`${product.name} product artwork`}
+              fill
+              sizes="(min-width: 640px) 33vw, 100vw"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            />
+          ) : null}
+          <div
+            className={`absolute inset-0 ${
+              product.image
+                ? "bg-gradient-to-t from-black/45 via-black/5 to-transparent"
+                : "scale-100 opacity-30 mix-blend-overlay transition-transform duration-500 ease-out group-hover:scale-125 [background-image:radial-gradient(circle_at_20%_20%,white_0,transparent_40%),radial-gradient(circle_at_80%_60%,black_0,transparent_35%)]"
+            }`}
+          />
           <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 [box-shadow:inset_0_0_0_1px_rgb(255_255_255/0.2),inset_0_-40px_60px_-20px_rgb(0_0_0/0.25)]" />
           <span className="relative rounded-md bg-white/15 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-sm transition-colors duration-200 group-hover:bg-white/25">
             Digital package

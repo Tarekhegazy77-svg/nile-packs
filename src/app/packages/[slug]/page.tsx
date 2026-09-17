@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Check, ArrowLeft } from "lucide-react";
@@ -45,8 +46,29 @@ export default async function PackageDetailPage({ params }: Props) {
       </Link>
 
       <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:items-start">
-        <div className="group/media relative overflow-hidden rounded-3xl bg-gradient-to-br from-nile via-nile-deep to-teal p-8 text-sand shadow-xl shadow-nile/20 transition-shadow duration-300 hover:shadow-2xl hover:shadow-nile/30 sm:min-h-[360px] sm:p-10">
-          <div className="absolute inset-0 scale-100 opacity-40 transition-transform duration-700 ease-out group-hover/media:scale-110 [background-image:radial-gradient(circle_at_30%_20%,white_0,transparent_45%),radial-gradient(circle_at_90%_80%,#e8b84a_0,transparent_40%)]" />
+        <div
+          className={`group/media relative overflow-hidden rounded-3xl p-8 text-sand shadow-xl shadow-nile/20 transition-shadow duration-300 hover:shadow-2xl hover:shadow-nile/30 sm:min-h-[360px] sm:p-10 ${
+            product.image
+              ? "bg-nile"
+              : "bg-gradient-to-br from-nile via-nile-deep to-teal"
+          }`}
+        >
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={`${product.name} product artwork`}
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover/media:scale-105"
+            />
+          ) : null}
+          <div
+            className={`absolute inset-0 ${
+              product.image
+                ? "bg-gradient-to-t from-black/75 via-black/20 to-black/10"
+                : "scale-100 opacity-40 transition-transform duration-700 ease-out group-hover/media:scale-110 [background-image:radial-gradient(circle_at_30%_20%,white_0,transparent_45%),radial-gradient(circle_at_90%_80%,#e8b84a_0,transparent_40%)]"
+            }`}
+          />
           <div className="relative flex h-full flex-col justify-between gap-12">
             <div>
               <span className="rounded-full bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] backdrop-blur">

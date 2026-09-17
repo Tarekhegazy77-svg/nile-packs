@@ -6,6 +6,7 @@ export type Product = {
   includes: string[];
   priceLE: number;
   featured: boolean;
+  image?: string;
 };
 
 export const products: Product[] = [
@@ -18,6 +19,7 @@ export const products: Product[] = [
     includes: ["Core template", "Quick-start PDF"],
     priceLE: 749.99,
     featured: true,
+    image: "/products/starter-pack.png",
   },
   {
     id: "pro-pack",
@@ -33,6 +35,7 @@ export const products: Product[] = [
     ],
     priceLE: 1949.99,
     featured: true,
+    image: "/products/pro-pack.png",
   },
   {
     id: "agency-bundle",
@@ -47,6 +50,7 @@ export const products: Product[] = [
     ],
     priceLE: 7449.99,
     featured: true,
+    image: "/products/agency-bundle.png",
   },
   {
     id: "launch-kit",
@@ -84,6 +88,7 @@ export const products: Product[] = [
     ],
     priceLE: 9949.99,
     featured: true,
+    image: "/products/all-access-bundle.png",
   },
 ];
 
