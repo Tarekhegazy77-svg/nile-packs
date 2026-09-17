@@ -6,15 +6,24 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { formatLE } from "@/lib/format";
 import { roundMoney, discountPercentLabel } from "@/lib/discount";
+import {
+  createPaymobCheckout,
+  isPaymobLive,
+} from "@/lib/paymob";
 import { CreditCard, Loader2, ShoppingBag, ArrowRight, Info } from "lucide-react";
 
 type FieldErrors = {
   name?: string;
   email?: string;
+  phone?: string;
 };
+
+const LAST_ORDER_KEY = "packages-store-last-order";
+const PENDING_ORDER_KEY = "packages-store-pending-order";
 
 export function CheckoutForm() {
   const router = useRouter();
+  const live = isPaymobLive();
   const {
     ready,
     lines,
@@ -25,6 +34,7 @@ export function CheckoutForm() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [paying, setPaying] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
@@ -52,8 +62,8 @@ export function CheckoutForm() {
           Nothing to check out
         </h2>
         <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-nile-muted sm:text-base">
-          Your cart is empty. Add a package first — then you can run the demo
-          payment with the {off} sale already applied.
+          Your cart is empty. Add a package first — then you can pay with the{" "}
+          {off} sale already applied.
         </p>
         <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
@@ -84,10 +94,16 @@ export function CheckoutForm() {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       next.email = "That email does not look valid — check for typos.";
     }
+    const phoneDigits = phone.replace(/\D/g, "");
+    if (!phone.trim()) {
+      next.phone = "Enter your mobile number (required for Paymob).";
+    } else if (phoneDigits.length < 8) {
+      next.phone = "Enter a valid phone number.";
+    }
     return next;
   }
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setFormError("");
     const next = validate();
@@ -98,30 +114,66 @@ export function CheckoutForm() {
     }
 
     setPaying(true);
-    const order = {
+
+    const orderItems = lines.map((l) => ({
+      id: l.product.id,
+      slug: l.product.slug,
+      name: l.product.name,
+      quantity: l.quantity,
+      unitPrice: roundMoney(l.lineDiscounted / l.quantity),
+    }));
+
+    const orderSnapshot = {
       name: name.trim(),
       email: email.trim(),
+      phone: phone.trim(),
       total,
-      items: lines.map((l) => ({
-        id: l.product.id,
-        slug: l.product.slug,
-        name: l.product.name,
-        quantity: l.quantity,
-        unitPrice: roundMoney(l.lineDiscounted / l.quantity),
-      })),
+      items: orderItems,
       createdAt: new Date().toISOString(),
+      live,
     };
 
-    try {
-      sessionStorage.setItem("packages-store-last-order", JSON.stringify(order));
-    } catch {
-      /* ignore storage errors in demo */
+    if (!live) {
+      try {
+        sessionStorage.setItem(LAST_ORDER_KEY, JSON.stringify(orderSnapshot));
+      } catch {
+        /* ignore */
+      }
+      window.setTimeout(() => {
+        clearCart();
+        router.push("/success");
+      }, 900);
+      return;
     }
 
-    window.setTimeout(() => {
-      clearCart();
-      router.push("/success");
-    }, 900);
+    try {
+      const result = await createPaymobCheckout({
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        subtotalDiscounted: total,
+        lines: orderItems,
+      });
+
+      try {
+        sessionStorage.setItem(
+          PENDING_ORDER_KEY,
+          JSON.stringify({
+            ...orderSnapshot,
+            merchantOrderId: result.merchantOrderId,
+          })
+        );
+      } catch {
+        /* ignore */
+      }
+
+      window.location.href = result.checkoutUrl;
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Could not start payment.";
+      setFormError(message);
+      setPaying(false);
+    }
   }
 
   return (
@@ -131,22 +183,39 @@ export function CheckoutForm() {
         noValidate
         className="rounded-2xl border border-nile-ink/8 bg-white p-5 shadow-sm sm:p-8"
       >
-        <div className="flex items-start gap-3 rounded-xl border border-saffron/40 bg-saffron/10 px-3.5 py-3 text-sm text-nile-ink sm:px-4">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
-          <div>
-            <p className="font-semibold">Demo payment — no real charge</p>
-            <p className="mt-0.5 text-nile-muted">
-              This checkout simulates a card payment. Nothing is billed and no
-              payment provider is connected.
-            </p>
+        {!live && (
+          <div className="flex items-start gap-3 rounded-xl border border-saffron/40 bg-saffron/10 px-3.5 py-3 text-sm text-nile-ink sm:px-4">
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" />
+            <div>
+              <p className="font-semibold">Demo payment — no real charge</p>
+              <p className="mt-0.5 text-nile-muted">
+                Set <code className="text-xs">NEXT_PUBLIC_PAYMOB_API_BASE</code>{" "}
+                to your Cloudflare Worker URL to enable live Paymob checkout.
+              </p>
+            </div>
           </div>
-        </div>
+        )}
+
+        {live && (
+          <div className="flex items-start gap-3 rounded-xl border border-teal/30 bg-teal/10 px-3.5 py-3 text-sm text-nile-ink sm:px-4">
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-teal" />
+            <div>
+              <p className="font-semibold">Secure Paymob checkout</p>
+              <p className="mt-0.5 text-nile-muted">
+                You will be redirected to Paymob to pay in EGP. Card details
+                never touch this site.
+              </p>
+            </div>
+          </div>
+        )}
 
         <h2 className="mt-6 font-display text-2xl font-semibold text-nile-ink">
           Your details
         </h2>
         <p className="mt-1 text-sm text-nile-muted">
-          We only use these for the demo confirmation screen.
+          {live
+            ? "Used for your receipt and Paymob billing."
+            : "We only use these for the demo confirmation screen."}
         </p>
 
         <div className="mt-6 space-y-4">
@@ -208,6 +277,36 @@ export function CheckoutForm() {
               </p>
             )}
           </label>
+          <label className="block">
+            <span className="text-xs font-bold uppercase tracking-wide text-nile-muted">
+              Phone
+            </span>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => {
+                setPhone(e.target.value);
+                if (fieldErrors.phone) {
+                  setFieldErrors((prev) => ({ ...prev, phone: undefined }));
+                }
+              }}
+              autoComplete="tel"
+              inputMode="tel"
+              aria-invalid={Boolean(fieldErrors.phone)}
+              aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
+              className={`mt-1.5 w-full rounded-xl border bg-sand px-4 py-3 text-base text-nile-ink outline-none transition duration-150 focus:ring-2 sm:text-sm ${
+                fieldErrors.phone
+                  ? "border-terracotta focus:border-terracotta focus:ring-terracotta/20"
+                  : "border-nile-ink/15 focus:border-nile focus:ring-nile/20"
+              }`}
+              placeholder="01xxxxxxxxx or +20…"
+            />
+            {fieldErrors.phone && (
+              <p id="phone-error" className="mt-1.5 text-sm text-terracotta">
+                {fieldErrors.phone}
+              </p>
+            )}
+          </label>
         </div>
 
         {formError && (
@@ -227,18 +326,21 @@ export function CheckoutForm() {
           {paying ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Simulating payment…
+              {live ? "Redirecting to Paymob…" : "Simulating payment…"}
             </>
           ) : (
             <>
               <CreditCard className="h-4 w-4" />
-              Pay {formatLE(total)} · demo only
+              {live
+                ? `Pay ${formatLE(total)} with Paymob`
+                : `Pay ${formatLE(total)} · demo only`}
             </>
           )}
         </button>
         <p className="mt-3 text-center text-xs leading-relaxed text-nile-muted">
-          By continuing you acknowledge this is a local demo — no card details
-          are collected.
+          {live
+            ? "You will leave this site briefly to complete payment on Paymob’s secure page."
+            : "By continuing you acknowledge this is a local demo — no card details are collected."}
         </p>
       </form>
 
@@ -278,6 +380,7 @@ export function CheckoutForm() {
         </dl>
         <p className="mt-3 text-xs leading-relaxed text-nile-muted">
           Sale price already includes the automatic {off} discount.
+          {live ? " Charged in EGP via Paymob." : ""}
         </p>
       </aside>
     </div>

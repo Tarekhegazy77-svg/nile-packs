@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "worker:dev": "npm run dev --prefix workers/paymob",
+    "worker:deploy": "npm run deploy --prefix workers/paymob",
+    "worker:install": "npm install --prefix workers/paymob"
   },
   "dependencies": {
     "lucide-react": "^1.47.0",

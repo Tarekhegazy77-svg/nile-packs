@@ -53,8 +53,8 @@ export function SuccessView() {
           No recent order found
         </h1>
         <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-nile-muted sm:text-base">
-          Complete a demo checkout to see stub download links here. Nothing is
-          charged — it is a local simulation only.
+          Complete checkout to see your order here. Live Paymob payments
+          confirm on /payment/complete instead.
         </p>
         <Link
           href="/packages"
@@ -72,7 +72,7 @@ export function SuccessView() {
       <div className="rounded-2xl border border-teal/20 bg-gradient-to-br from-teal/10 to-white p-6 text-center shadow-sm sm:p-8">
         <CheckCircle2 className="mx-auto h-12 w-12 text-teal" />
         <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-teal">
-          Demo order complete
+          Order complete
         </p>
         <h1 className="mt-2 font-display text-3xl font-semibold text-nile-ink sm:text-4xl">
           You are all set
@@ -82,10 +82,11 @@ export function SuccessView() {
           <span className="font-medium text-nile-ink">{order.email}</span>.
         </p>
         <p className="mt-3 inline-flex rounded-full bg-white/80 px-3 py-1.5 text-sm font-semibold text-nile ring-1 ring-nile/10">
-          Simulated total: {formatLE(order.total)}
+          Total: {formatLE(order.total)}
         </p>
         <p className="mt-3 text-xs text-nile-muted">
-          No real payment was processed.
+          Demo checkout — no real payment was processed. Live payments use
+          Paymob and land on /payment/complete.
         </p>
       </div>
 

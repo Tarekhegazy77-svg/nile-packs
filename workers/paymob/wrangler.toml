@@ -1,0 +1,30 @@
+# Nile Packs — Paymob Intention API Worker
+# Docs: ../../PAYMOB.md
+#
+# Secrets (set via `wrangler secret put <NAME>` — do NOT commit real values):
+#   PAYMOB_SECRET_KEY
+#   PAYMOB_HMAC_SECRET
+#
+# Plain vars below are placeholders — replace before deploy, or override with
+# `wrangler secret` / dashboard for anything sensitive.
+
+name = "nile-packs-paymob"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Storefront origin (no trailing slash). Used for CORS + redirection_url.
+[vars]
+PAYMOB_PUBLIC_KEY = "pk_test_REPLACE_ME"
+PAYMOB_INTEGRATION_ID_CARD = "0"
+APP_URL = "https://tarekhegazy77-svg.github.io/nile-packs"
+
+# KV namespace for order status (binding name MUST be ORDERS).
+# Create with:
+#   npx wrangler kv namespace create ORDERS
+#   npx wrangler kv namespace create ORDERS --preview
+# Then paste the ids below.
+[[kv_namespaces]]
+binding = "ORDERS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+preview_id = "REPLACE_WITH_KV_PREVIEW_NAMESPACE_ID"
