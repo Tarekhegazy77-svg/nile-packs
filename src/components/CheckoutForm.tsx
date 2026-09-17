@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useHasMounted } from "@/lib/use-has-mounted";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cart";
 import { formatLE } from "@/lib/format";
@@ -8,6 +9,7 @@ import { roundMoney } from "@/lib/discount";
 import { CreditCard, Loader2 } from "lucide-react";
 
 export function CheckoutForm() {
+  const mounted = useHasMounted();
   const router = useRouter();
   const lineItems = useCartStore((s) => s.lineItems);
   const subtotalDiscounted = useCartStore((s) => s.subtotalDiscounted);
@@ -23,6 +25,14 @@ export function CheckoutForm() {
   const total = roundMoney(subtotalDiscounted());
   const original = roundMoney(subtotalOriginal());
   const saved = roundMoney(original - total);
+
+  if (!mounted) {
+    return (
+      <div className="rounded-2xl border border-nile-ink/8 bg-white px-6 py-12 text-center text-sm text-nile-muted">
+        Loading checkout…
+      </div>
+    );
+  }
 
   if (lines.length === 0 && !paying) {
     return (

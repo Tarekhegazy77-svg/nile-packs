@@ -6,8 +6,10 @@ import { useCartStore } from "@/store/cart";
 import { formatLE } from "@/lib/format";
 import { roundMoney } from "@/lib/discount";
 import { PriceDisplay } from "./PriceDisplay";
+import { useHasMounted } from "@/lib/use-has-mounted";
 
 export function CartView() {
+  const mounted = useHasMounted();
   const lineItems = useCartStore((s) => s.lineItems);
   const setQuantity = useCartStore((s) => s.setQuantity);
   const removeItem = useCartStore((s) => s.removeItem);
@@ -18,6 +20,14 @@ export function CartView() {
   const original = roundMoney(subtotalOriginal());
   const discounted = roundMoney(subtotalDiscounted());
   const saved = roundMoney(original - discounted);
+
+  if (!mounted) {
+    return (
+      <div className="rounded-2xl border border-nile-ink/8 bg-white px-6 py-16 text-center text-sm text-nile-muted">
+        Loading cart…
+      </div>
+    );
+  }
 
   if (lines.length === 0) {
     return (
