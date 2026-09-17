@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { DM_Sans, Fraunces } from "next/font/google";
+import { Providers } from "@/components/Providers";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { CartHydrator } from "@/components/CartHydrator";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -34,10 +34,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${dmSans.variable} ${fraunces.variable} h-full`}>
       <body className="grain flex min-h-full flex-col antialiased">
-        <CartHydrator />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <Providers>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

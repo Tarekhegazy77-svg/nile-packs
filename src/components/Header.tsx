@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { ShoppingBag, Package } from "lucide-react";
-import { useCartStore, getCartTotalItems } from "@/store/cart";
+import { useCart } from "@/context/CartContext";
 
 export function Header() {
-  const items = useCartStore((s) => s.items);
-  const hasHydrated = useCartStore((s) => s.hasHydrated);
-  const count = getCartTotalItems(items);
+  const { ready, totalItems } = useCart();
+  const count = ready ? totalItems : 0;
 
   return (
     <header className="sticky top-0 z-50 border-b border-nile-ink/8 bg-sand/90 backdrop-blur-md">
@@ -40,12 +39,12 @@ export function Header() {
           <Link
             href="/cart"
             className="relative inline-flex min-h-11 items-center gap-2 rounded-full bg-nile-ink px-3.5 py-2 text-sm font-semibold text-sand shadow-sm transition-all duration-200 hover:scale-[1.03] hover:bg-nile hover:shadow-md hover:shadow-nile/30 active:scale-[0.98] sm:px-4"
-            aria-label={`Cart with ${hasHydrated ? count : 0} items`}
+            aria-label={`Cart with ${count} items`}
           >
             <ShoppingBag className="h-4 w-4" />
             <span className="hidden sm:inline">Cart</span>
-            {hasHydrated && count > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-saffron px-1 text-[11px] font-bold text-nile-ink shadow transition-transform duration-150">
+            {count > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-saffron px-1 text-[11px] font-bold text-nile-ink shadow">
                 {count > 99 ? "99+" : count}
               </span>
             )}

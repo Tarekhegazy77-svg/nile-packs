@@ -3,12 +3,7 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  useCartStore,
-  getCartLineItems,
-  getCartSubtotalOriginal,
-  getCartSubtotalDiscounted,
-} from "@/store/cart";
+import { useCart } from "@/context/CartContext";
 import { formatLE } from "@/lib/format";
 import { roundMoney, discountPercentLabel } from "@/lib/discount";
 import { CreditCard, Loader2, ShoppingBag, ArrowRight, Info } from "lucide-react";
@@ -20,9 +15,13 @@ type FieldErrors = {
 
 export function CheckoutForm() {
   const router = useRouter();
-  const items = useCartStore((s) => s.items);
-  const hasHydrated = useCartStore((s) => s.hasHydrated);
-  const clearCart = useCartStore((s) => s.clearCart);
+  const {
+    ready,
+    lines,
+    clearCart,
+    subtotalOriginal,
+    subtotalDiscounted,
+  } = useCart();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -30,13 +29,12 @@ export function CheckoutForm() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
 
-  const lines = getCartLineItems(items);
-  const total = roundMoney(getCartSubtotalDiscounted(items));
-  const original = roundMoney(getCartSubtotalOriginal(items));
+  const total = roundMoney(subtotalDiscounted);
+  const original = roundMoney(subtotalOriginal);
   const saved = roundMoney(original - total);
   const off = discountPercentLabel();
 
-  if (!hasHydrated) {
+  if (!ready) {
     return (
       <div className="rounded-2xl border border-nile-ink/8 bg-white px-6 py-12 text-center text-sm text-nile-muted">
         Loading checkout…

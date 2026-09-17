@@ -2,29 +2,27 @@
 
 import Link from "next/link";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
-import {
-  useCartStore,
-  getCartLineItems,
-  getCartSubtotalOriginal,
-  getCartSubtotalDiscounted,
-} from "@/store/cart";
+import { useCart } from "@/context/CartContext";
 import { formatLE } from "@/lib/format";
 import { roundMoney, discountPercentLabel } from "@/lib/discount";
 import { PriceDisplay } from "./PriceDisplay";
 
 export function CartView() {
-  const items = useCartStore((s) => s.items);
-  const hasHydrated = useCartStore((s) => s.hasHydrated);
-  const setQuantity = useCartStore((s) => s.setQuantity);
-  const removeItem = useCartStore((s) => s.removeItem);
+  const {
+    ready,
+    lines,
+    setQuantity,
+    removeItem,
+    subtotalOriginal,
+    subtotalDiscounted,
+  } = useCart();
 
-  const lines = getCartLineItems(items);
-  const original = roundMoney(getCartSubtotalOriginal(items));
-  const discounted = roundMoney(getCartSubtotalDiscounted(items));
+  const original = roundMoney(subtotalOriginal);
+  const discounted = roundMoney(subtotalDiscounted);
   const saved = roundMoney(original - discounted);
   const off = discountPercentLabel();
 
-  if (!hasHydrated) {
+  if (!ready) {
     return (
       <div className="rounded-2xl border border-nile-ink/8 bg-white px-6 py-16 text-center text-sm text-nile-muted">
         Loading cart…

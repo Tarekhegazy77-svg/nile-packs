@@ -2,7 +2,7 @@
 
 import { useState, type MouseEvent } from "react";
 import { ShoppingBag, Check } from "lucide-react";
-import { useCartStore } from "@/store/cart";
+import { useCart } from "@/context/CartContext";
 
 type Props = {
   productId: string;
@@ -15,7 +15,7 @@ export function AddToCartButton({
   className = "",
   label = "Add to cart",
 }: Props) {
-  const addItem = useCartStore((s) => s.addItem);
+  const { addItem } = useCart();
   const [justAdded, setJustAdded] = useState(false);
 
   function handleClick(e: MouseEvent<HTMLButtonElement>) {
@@ -30,6 +30,7 @@ export function AddToCartButton({
     <button
       type="button"
       onClick={handleClick}
+      data-testid={`add-to-cart-${productId}`}
       className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold shadow-sm transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nile ${
         justAdded
           ? "scale-[1.02] bg-teal text-white shadow-md shadow-teal/30"
