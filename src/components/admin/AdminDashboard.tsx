@@ -21,7 +21,6 @@ import {
   fetchAdminUsers,
   getStoredToken,
   getStoredUser,
-  isAdminApiConfigured,
   patchAdminOrder,
   patchAdminProduct,
   patchAdminUser,
@@ -44,7 +43,7 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; ownerOnly?: 
 
 export function AdminDashboard() {
   const router = useRouter();
-  const configured = isAdminApiConfigured();
+  const configured = true;
   const [tab, setTab] = useState<Tab>("overview");
   const [user, setUser] = useState(getStoredUser());
   const [booting, setBooting] = useState(true);

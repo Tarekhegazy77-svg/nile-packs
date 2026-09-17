@@ -1,4 +1,7 @@
-/** Client helpers for the Nile Packs Admin API (Cloudflare Worker). */
+/** Local (browser) admin store — no Cloudflare required. Data lives in localStorage on this device. */
+
+import { products as seedProducts } from "@/lib/products";
+import { OWNER_EMAIL, OWNER_PASSWORD_SHA256 } from "@/lib/admin-owner";
 
 export type AdminRole = "owner" | "staff";
 
@@ -9,6 +12,8 @@ export type AdminUser = {
   active: boolean;
   createdAt?: string;
   updatedAt?: string;
+  /** stored only in local DB, never returned to UI */
+  passwordHash?: string;
 };
 
 export type AdminProduct = {
@@ -53,123 +58,212 @@ export type AdminStats = {
   recentOrders: AdminOrder[];
 };
 
+type Store = {
+  users: AdminUser[];
+  products: AdminProduct[];
+  orders: AdminOrder[];
+};
+
+const STORE_KEY = "nile-packs-admin-v1";
 const TOKEN_KEY = "nile-packs-admin-token";
 const USER_KEY = "nile-packs-admin-user";
 
+export class AdminApiError extends Error {
+  status: number;
+  constructor(message: string, status = 400) {
+    super(message);
+    this.name = "AdminApiError";
+    this.status = status;
+  }
+}
+
 export function getAdminApiBase(): string {
-  return (process.env.NEXT_PUBLIC_ADMIN_API_BASE || "").replace(/\/$/, "");
+  return "local";
 }
 
 export function isAdminApiConfigured(): boolean {
-  return Boolean(getAdminApiBase());
+  return true;
+}
+
+async function sha256Hex(text: string): Promise<string> {
+  const data = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function uid(prefix: string): string {
+  return `${prefix}_${Math.random().toString(36).slice(2, 10)}${Date.now().toString(36)}`;
+}
+
+function publicUser(u: AdminUser): AdminUser {
+  const { passwordHash: _, ...rest } = u;
+  return rest;
+}
+
+function seedStore(): Store {
+  const now = new Date().toISOString();
+  return {
+    users: [
+      {
+        id: "owner",
+        email: OWNER_EMAIL,
+        role: "owner",
+        active: true,
+        passwordHash: OWNER_PASSWORD_SHA256,
+        createdAt: now,
+        updatedAt: now,
+      },
+    ],
+    products: seedProducts.map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      name: p.name,
+      description: p.description,
+      includes: p.includes,
+      priceLE: p.priceLE,
+      featured: p.featured,
+      image: p.image,
+      inStock: true,
+      stockQty: null,
+      removed: false,
+    })),
+    orders: [],
+  };
+}
+
+function readStore(): Store {
+  if (typeof window === "undefined") return seedStore();
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) {
+      const s = seedStore();
+      localStorage.setItem(STORE_KEY, JSON.stringify(s));
+      return s;
+    }
+    const parsed = JSON.parse(raw) as Store;
+    if (!parsed.users?.length) {
+      const s = seedStore();
+      localStorage.setItem(STORE_KEY, JSON.stringify(s));
+      return s;
+    }
+    // Ensure owner hash stays in sync with build-time hash
+    const owner = parsed.users.find((u) => u.role === "owner");
+    if (owner) {
+      owner.email = OWNER_EMAIL;
+      owner.passwordHash = OWNER_PASSWORD_SHA256;
+      owner.active = true;
+    }
+    if (!parsed.products?.length) {
+      parsed.products = seedStore().products;
+    }
+    if (!parsed.orders) parsed.orders = [];
+    return parsed;
+  } catch {
+    const s = seedStore();
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(s));
+    } catch {
+      /* ignore */
+    }
+    return s;
+  }
+}
+
+function writeStore(s: Store) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(s));
 }
 
 export function getStoredToken(): string | null {
   if (typeof window === "undefined") return null;
   try {
-    return window.sessionStorage.getItem(TOKEN_KEY);
+    return sessionStorage.getItem(TOKEN_KEY);
   } catch {
     return null;
   }
 }
 
-export function getStoredUser(): { email: string; role: AdminRole; id?: string } | null {
+export function getStoredUser(): {
+  email: string;
+  role: AdminRole;
+  id?: string;
+} | null {
   if (typeof window === "undefined") return null;
   try {
-    const raw = window.sessionStorage.getItem(USER_KEY);
+    const raw = sessionStorage.getItem(USER_KEY);
     if (!raw) return null;
-    return JSON.parse(raw) as { email: string; role: AdminRole; id?: string };
+    return JSON.parse(raw);
   } catch {
     return null;
   }
 }
 
-export function storeSession(
+function storeSession(
   token: string,
   user: { email: string; role: AdminRole; id?: string }
 ) {
-  window.sessionStorage.setItem(TOKEN_KEY, token);
-  window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+  sessionStorage.setItem(TOKEN_KEY, token);
+  sessionStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
 export function clearSession() {
-  window.sessionStorage.removeItem(TOKEN_KEY);
-  window.sessionStorage.removeItem(USER_KEY);
-}
-
-export class AdminApiError extends Error {
-  status: number;
-  constructor(message: string, status: number) {
-    super(message);
-    this.status = status;
-  }
-}
-
-async function adminFetch<T>(
-  path: string,
-  options: RequestInit & { auth?: boolean } = {}
-): Promise<T> {
-  const base = getAdminApiBase();
-  if (!base) throw new AdminApiError("Admin API not configured", 0);
-
-  const headers = new Headers(options.headers || {});
-  if (!headers.has("Content-Type") && options.body) {
-    headers.set("Content-Type", "application/json");
-  }
-  if (options.auth !== false) {
-    const token = getStoredToken();
-    if (!token) throw new AdminApiError("Not authenticated", 401);
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-
-  const res = await fetch(`${base}${path}`, { ...options, headers });
-  let data: unknown = null;
-  const text = await res.text();
   try {
-    data = text ? JSON.parse(text) : null;
-  } catch {
-    data = { error: text.slice(0, 200) };
-  }
-
-  if (!res.ok) {
-    const msg =
-      data && typeof data === "object" && "error" in data
-        ? String((data as { error: unknown }).error)
-        : `Request failed (${res.status})`;
-    if (res.status === 401) clearSession();
-    throw new AdminApiError(msg, res.status);
-  }
-  return data as T;
-}
-
-export async function adminLogin(email: string, password: string) {
-  const data = await adminFetch<{
-    token: string;
-    user: { email: string; role: AdminRole; id?: string };
-  }>("/admin/login", {
-    method: "POST",
-    auth: false,
-    body: JSON.stringify({ email, password }),
-  });
-  storeSession(data.token, data.user);
-  return data;
-}
-
-export async function adminLogout() {
-  try {
-    await adminFetch("/admin/logout", { method: "POST" });
+    sessionStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(USER_KEY);
   } catch {
     /* ignore */
   }
+}
+
+function requireSession(): AdminUser {
+  const token = getStoredToken();
+  const sess = getStoredUser();
+  if (!token || !sess) throw new AdminApiError("Not signed in", 401);
+  const store = readStore();
+  const user = store.users.find(
+    (u) =>
+      u.id === sess.id ||
+      u.email.toLowerCase() === sess.email.toLowerCase()
+  );
+  if (!user || !user.active) {
+    clearSession();
+    throw new AdminApiError("Not signed in", 401);
+  }
+  return user;
+}
+
+export async function adminLogin(email: string, password: string) {
+  const store = readStore();
+  const hash = await sha256Hex(password);
+  const user = store.users.find(
+    (u) => u.email.toLowerCase() === email.trim().toLowerCase()
+  );
+  if (!user || !user.active || user.passwordHash !== hash) {
+    throw new AdminApiError("Invalid email or password", 401);
+  }
+  const token = uid("tok");
+  storeSession(token, {
+    email: user.email,
+    role: user.role,
+    id: user.id,
+  });
+  writeStore(store);
+  return { token, user: publicUser(user) };
+}
+
+export async function adminLogout() {
   clearSession();
 }
 
 export async function adminMe() {
-  return adminFetch<{ user: AdminUser }>("/admin/me");
+  const user = requireSession();
+  return { user: publicUser(user) };
 }
 
 export async function fetchAdminProducts() {
-  return adminFetch<{ products: AdminProduct[] }>("/admin/products");
+  requireSession();
+  return { products: readStore().products };
 }
 
 export async function patchAdminProduct(
@@ -181,32 +275,70 @@ export async function patchAdminProduct(
     >
   >
 ) {
-  return adminFetch<{ product: AdminProduct }>(
-    `/admin/products/${encodeURIComponent(id)}`,
-    { method: "PATCH", body: JSON.stringify(patch) }
-  );
+  requireSession();
+  const store = readStore();
+  const i = store.products.findIndex((p) => p.id === id);
+  if (i < 0) throw new AdminApiError("Product not found", 404);
+  store.products[i] = { ...store.products[i], ...patch };
+  writeStore(store);
+  return { product: store.products[i] };
 }
 
 export async function fetchAdminOrders() {
-  return adminFetch<{ orders: AdminOrder[] }>("/admin/orders");
+  requireSession();
+  const orders = [...readStore().orders].sort((a, b) =>
+    b.createdAt.localeCompare(a.createdAt)
+  );
+  return { orders };
 }
 
-export async function fetchAdminStats() {
-  return adminFetch<AdminStats>("/admin/stats");
+export async function fetchAdminStats(): Promise<AdminStats> {
+  requireSession();
+  const orders = readStore().orders;
+  const byStatus: Record<string, number> = {};
+  let revenueCents = 0;
+  let paidCount = 0;
+  for (const o of orders) {
+    byStatus[o.status] = (byStatus[o.status] || 0) + 1;
+    if (o.status === "paid" || o.status === "fulfilled") {
+      paidCount += 1;
+      revenueCents += o.amountCents;
+    }
+  }
+  const recent = [...orders]
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, 8);
+  return {
+    orderCount: orders.length,
+    paidCount,
+    revenueCents,
+    revenueEGP: revenueCents / 100,
+    byStatus,
+    recentOrders: recent,
+  };
 }
 
 export async function patchAdminOrder(
   id: string,
   status: AdminOrder["status"]
 ) {
-  return adminFetch<{ order: AdminOrder }>(
-    `/admin/orders/${encodeURIComponent(id)}`,
-    { method: "PATCH", body: JSON.stringify({ status }) }
-  );
+  requireSession();
+  const store = readStore();
+  const i = store.orders.findIndex((o) => o.merchantOrderId === id);
+  if (i < 0) throw new AdminApiError("Order not found", 404);
+  store.orders[i] = {
+    ...store.orders[i],
+    status,
+    updatedAt: new Date().toISOString(),
+  };
+  writeStore(store);
+  return { order: store.orders[i] };
 }
 
 export async function fetchAdminUsers() {
-  return adminFetch<{ users: AdminUser[] }>("/admin/users");
+  const me = requireSession();
+  if (me.role !== "owner") throw new AdminApiError("Owner only", 403);
+  return { users: readStore().users.map(publicUser) };
 }
 
 export async function createAdminUser(input: {
@@ -214,27 +346,54 @@ export async function createAdminUser(input: {
   password: string;
   role: AdminRole;
 }) {
-  return adminFetch<{ user: AdminUser }>("/admin/users", {
-    method: "POST",
-    body: JSON.stringify(input),
-  });
+  const me = requireSession();
+  if (me.role !== "owner") throw new AdminApiError("Owner only", 403);
+  const email = input.email.trim().toLowerCase();
+  if (!email || !input.password || input.password.length < 6) {
+    throw new AdminApiError("Email and password (6+ chars) required");
+  }
+  const store = readStore();
+  if (store.users.some((u) => u.email.toLowerCase() === email)) {
+    throw new AdminApiError("User already exists");
+  }
+  const now = new Date().toISOString();
+  const user: AdminUser = {
+    id: uid("user"),
+    email,
+    role: input.role === "owner" ? "owner" : "staff",
+    active: true,
+    passwordHash: await sha256Hex(input.password),
+    createdAt: now,
+    updatedAt: now,
+  };
+  store.users.push(user);
+  writeStore(store);
+  return { user: publicUser(user) };
 }
 
 export async function patchAdminUser(
   id: string,
-  patch: { role?: AdminRole; active?: boolean }
+  patch: Partial<Pick<AdminUser, "role" | "active">>
 ) {
-  return adminFetch<{ user: AdminUser }>(
-    `/admin/users/${encodeURIComponent(id)}`,
-    { method: "PATCH", body: JSON.stringify(patch) }
-  );
+  const me = requireSession();
+  if (me.role !== "owner") throw new AdminApiError("Owner only", 403);
+  const store = readStore();
+  const i = store.users.findIndex((u) => u.id === id);
+  if (i < 0) throw new AdminApiError("User not found", 404);
+  if (store.users[i].id === "owner" && patch.active === false) {
+    throw new AdminApiError("Cannot deactivate the primary owner");
+  }
+  store.users[i] = {
+    ...store.users[i],
+    ...patch,
+    updatedAt: new Date().toISOString(),
+  };
+  writeStore(store);
+  return { user: publicUser(store.users[i]) };
 }
 
+/** Public catalog for storefront (same browser). */
 export async function fetchPublicCatalog(): Promise<AdminProduct[]> {
-  const base = getAdminApiBase();
-  if (!base) return [];
-  const res = await fetch(`${base}/api/catalog`);
-  if (!res.ok) throw new Error("Failed to load catalog");
-  const data = (await res.json()) as { products: AdminProduct[] };
-  return data.products || [];
+  const store = readStore();
+  return store.products.filter((p) => !p.removed);
 }

@@ -3,33 +3,24 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Package } from "lucide-react";
-import {
-  adminLogin,
-  getStoredToken,
-  isAdminApiConfigured,
-} from "@/lib/admin-api";
+import { adminLogin, getStoredToken } from "@/lib/admin-api";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const configured = isAdminApiConfigured();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (configured && getStoredToken()) {
+    if (getStoredToken()) {
       router.replace("/admin/");
     }
-  }, [configured, router]);
+  }, [router]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
-    if (!configured) {
-      setError("Admin API not configured");
-      return;
-    }
     setLoading(true);
     try {
       await adminLogin(email.trim(), password);
@@ -58,15 +49,7 @@ export default function AdminLoginPage() {
           </div>
         </div>
 
-        {!configured ? (
-          <div className="mt-6 rounded-xl border border-terracotta/30 bg-terracotta/10 px-4 py-3 text-sm text-terracotta">
-            Admin API not configured. Set{" "}
-            <code className="font-mono text-xs">NEXT_PUBLIC_ADMIN_API_BASE</code>{" "}
-            and rebuild. See <code className="font-mono text-xs">ADMIN.md</code>.
-          </div>
-        ) : null}
-
-        <form onSubmit={onSubmit} className="mt-6 space-y-4">
+                <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <label className="block">
             <span className="text-xs font-bold uppercase tracking-[0.14em] text-nile-muted">
               Email
@@ -98,7 +81,7 @@ export default function AdminLoginPage() {
           ) : null}
           <button
             type="submit"
-            disabled={loading || !configured}
+            disabled={loading}
             className="btn-shine w-full rounded-full bg-nile py-3 text-sm font-semibold text-sand shadow-md shadow-nile/25 transition hover:bg-nile-deep disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Signing in…" : "Sign in"}

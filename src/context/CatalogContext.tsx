@@ -15,7 +15,6 @@ import {
 } from "@/lib/products";
 import {
   fetchPublicCatalog,
-  getAdminApiBase,
   type AdminProduct,
 } from "@/lib/admin-api";
 
@@ -69,16 +68,9 @@ const staticCatalog: CatalogProduct[] = staticProducts.map((p) =>
 export function CatalogProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<CatalogProduct[]>(staticCatalog);
   const [usingLive, setUsingLive] = useState(false);
-  const [ready, setReady] = useState(!getAdminApiBase());
+  const [ready, setReady] = useState(false);
 
   const refresh = useCallback(async () => {
-    const base = getAdminApiBase();
-    if (!base) {
-      setProducts(staticCatalog);
-      setUsingLive(false);
-      setReady(true);
-      return;
-    }
     try {
       const live = await fetchPublicCatalog();
       if (live.length > 0) {
