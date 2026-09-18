@@ -61,6 +61,7 @@ export const products: Product[] = [
     includes: ["Landing page templates", "Email copy pack"],
     priceLE: 1849.99,
     featured: false,
+    image: "/products/launch-kit.png",
   },
   {
     id: "creator-assets",
@@ -71,6 +72,7 @@ export const products: Product[] = [
     includes: ["Social media templates", "Cover set"],
     priceLE: 1449.99,
     featured: false,
+    image: "/products/creator-assets.png",
   },
   {
     id: "all-access-bundle",

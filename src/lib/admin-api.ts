@@ -157,6 +157,28 @@ function readStore(): Store {
     }
     if (!parsed.products?.length) {
       parsed.products = seedStore().products;
+    } else {
+      // Keep stock/removed flags; refresh catalog fields (e.g. new product art).
+      const seeded = new Map(seedStore().products.map((x) => [x.id, x]));
+      parsed.products = parsed.products.map((prod) => {
+        const s = seeded.get(prod.id);
+        if (!s) return prod;
+        return {
+          ...prod,
+          slug: s.slug,
+          name: s.name,
+          description: s.description,
+          includes: s.includes,
+          priceLE: s.priceLE,
+          featured: s.featured,
+          image: s.image ?? prod.image,
+        };
+      });
+      for (const s of seeded.values()) {
+        if (!parsed.products.some((p) => p.id === s.id)) {
+          parsed.products.push(s);
+        }
+      }
     }
     if (!parsed.orders) parsed.orders = [];
     return parsed;
