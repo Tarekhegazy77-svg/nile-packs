@@ -6,6 +6,7 @@ import type { Product } from "@/lib/products";
 import { PriceDisplay } from "./PriceDisplay";
 import { AddToCartButton } from "./AddToCartButton";
 import { useCatalogOptional } from "@/context/CatalogContext";
+import { assetPath } from "@/lib/asset-path";
 
 const accents = [
   "from-nile/90 to-teal",
@@ -37,6 +38,7 @@ export function ProductCard({ product: initial }: Props) {
         priceLE: live.priceLE,
         featured: live.featured,
         description: live.description,
+        image: live.image ?? initial.image,
       }
     : initial;
   const outOfStock = live != null && live.inStock === false;
@@ -50,7 +52,7 @@ export function ProductCard({ product: initial }: Props) {
         >
           {product.image ? (
             <Image
-              src={product.image}
+              src={assetPath(product.image)!}
               alt={`${product.name} product artwork`}
               fill
               sizes="(min-width: 640px) 33vw, 100vw"

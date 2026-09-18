@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { assetPath } from "@/lib/asset-path";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Check, ArrowLeft } from "lucide-react";
@@ -55,7 +56,7 @@ export default async function PackageDetailPage({ params }: Props) {
         >
           {product.image ? (
             <Image
-              src={product.image}
+              src={assetPath(product.image)!}
               alt={`${product.name} product artwork`}
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
