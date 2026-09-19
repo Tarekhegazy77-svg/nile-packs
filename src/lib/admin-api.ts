@@ -414,6 +414,24 @@ export async function patchAdminUser(
   return { user: publicUser(store.users[i]) };
 }
 
+export async function deleteAdminUser(id: string) {
+  const me = requireSession();
+  if (me.role !== "owner") throw new AdminApiError("Owner only", 403);
+  if (id === me.id) {
+    throw new AdminApiError("Cannot remove yourself");
+  }
+  const store = readStore();
+  const i = store.users.findIndex((u) => u.id === id);
+  if (i < 0) throw new AdminApiError("User not found", 404);
+  const target = store.users[i];
+  if (target.id === "owner") {
+    throw new AdminApiError("Cannot remove the primary owner");
+  }
+  store.users.splice(i, 1);
+  writeStore(store);
+  return { ok: true as const };
+}
+
 /** Public catalog for storefront (same browser). */
 export async function fetchPublicCatalog(): Promise<AdminProduct[]> {
   const store = readStore();

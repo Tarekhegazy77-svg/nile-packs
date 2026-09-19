@@ -15,6 +15,7 @@ import {
   adminMe,
   clearSession,
   createAdminUser,
+  deleteAdminUser,
   fetchAdminOrders,
   fetchAdminProducts,
   fetchAdminStats,
@@ -576,6 +577,37 @@ export function AdminDashboard() {
                       className="rounded-full border border-nile-ink/15 px-3 py-1.5 text-xs font-semibold hover:bg-nile/5 disabled:opacity-40"
                     >
                       {u.active ? "Deactivate" : "Activate"}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={
+                        busy || u.id === user?.id || u.id === "owner"
+                      }
+                      onClick={() => {
+                        if (
+                          !window.confirm(
+                            `Remove ${u.email} from the team? This cannot be undone.`
+                          )
+                        ) {
+                          return;
+                        }
+                        setBusy(true);
+                        setError("");
+                        void deleteAdminUser(u.id)
+                          .then(() => fetchAdminUsers())
+                          .then((r) => setUsers(r.users))
+                          .catch((err) =>
+                            setError(
+                              err instanceof Error
+                                ? err.message
+                                : "Remove failed"
+                            )
+                          )
+                          .finally(() => setBusy(false));
+                      }}
+                      className="rounded-full border border-terracotta/40 px-3 py-1.5 text-xs font-semibold text-terracotta hover:bg-terracotta/10 disabled:opacity-40"
+                    >
+                      Remove
                     </button>
                   </div>
                 </li>
