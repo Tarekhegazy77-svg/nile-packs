@@ -33,25 +33,25 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-sand px-4">
-      <div className="w-full max-w-md rounded-3xl border border-nile-ink/10 bg-white p-8 shadow-xl shadow-nile/10">
+    <div className="flex min-h-screen items-center justify-center px-4 py-12">
+      <div className="glass-panel w-full max-w-md rounded-3xl p-8">
         <div className="flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-nile text-sand">
+          <span className="logo-mark flex h-11 w-11 items-center justify-center rounded-xl bg-cyan text-ink">
             <Package className="h-5 w-5" />
           </span>
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-terracotta">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-gold">
               Nile Packs
             </p>
-            <h1 className="font-display text-2xl font-semibold text-nile-ink">
+            <h1 className="font-display text-2xl font-semibold text-mist">
               Admin sign in
             </h1>
           </div>
         </div>
 
-                <form onSubmit={onSubmit} className="mt-6 space-y-4">
+        <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <label className="block">
-            <span className="text-xs font-bold uppercase tracking-[0.14em] text-nile-muted">
+            <span className="text-xs font-bold uppercase tracking-[0.14em] text-silver">
               Email
             </span>
             <input
@@ -60,11 +60,11 @@ export default function AdminLoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-nile-ink/15 bg-sand/50 px-3 py-2.5 text-sm outline-none focus:border-nile focus:ring-2 focus:ring-nile/20"
+              className="focus-ring mt-1.5 w-full rounded-xl border border-line bg-ink-2 px-3 py-2.5 text-sm text-mist outline-none transition focus:border-cyan focus:ring-2 focus:ring-cyan/20"
             />
           </label>
           <label className="block">
-            <span className="text-xs font-bold uppercase tracking-[0.14em] text-nile-muted">
+            <span className="text-xs font-bold uppercase tracking-[0.14em] text-silver">
               Password
             </span>
             <input
@@ -73,16 +73,16 @@ export default function AdminLoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-nile-ink/15 bg-sand/50 px-3 py-2.5 text-sm outline-none focus:border-nile focus:ring-2 focus:ring-nile/20"
+              className="focus-ring mt-1.5 w-full rounded-xl border border-line bg-ink-2 px-3 py-2.5 text-sm text-mist outline-none transition focus:border-cyan focus:ring-2 focus:ring-cyan/20"
             />
           </label>
           {error ? (
-            <p className="text-sm font-medium text-terracotta">{error}</p>
+            <p className="text-sm font-medium text-danger">{error}</p>
           ) : null}
           <button
             type="submit"
             disabled={loading}
-            className="btn-shine w-full rounded-full bg-nile py-3 text-sm font-semibold text-sand shadow-md shadow-nile/25 transition hover:bg-nile-deep disabled:cursor-not-allowed disabled:opacity-50"
+            className="btn-shine btn-primary focus-ring w-full rounded-full py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>

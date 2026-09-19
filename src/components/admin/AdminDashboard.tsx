@@ -204,14 +204,14 @@ export function AdminDashboard() {
   if (!configured) {
     return (
       <div className="mx-auto max-w-lg px-4 py-20">
-        <div className="rounded-2xl border border-terracotta/30 bg-terracotta/10 p-6 text-terracotta">
-          <h1 className="font-display text-xl font-semibold">
+        <div className="rounded-2xl border border-danger/30 bg-danger/10 p-6 text-danger">
+          <h1 className="font-display text-xl font-semibold text-mist">
             Admin API not configured
           </h1>
-          <p className="mt-2 text-sm">
-            Set <code className="font-mono text-xs">NEXT_PUBLIC_ADMIN_API_BASE</code>{" "}
+          <p className="mt-2 text-sm text-silver">
+            Set <code className="font-mono text-xs text-cyan">NEXT_PUBLIC_ADMIN_API_BASE</code>{" "}
             to your Worker URL, then rebuild the static site. See{" "}
-            <code className="font-mono text-xs">ADMIN.md</code>.
+            <code className="font-mono text-xs text-cyan">ADMIN.md</code>.
           </p>
         </div>
       </div>
@@ -220,7 +220,7 @@ export function AdminDashboard() {
 
   if (booting) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-nile-muted">
+      <div className="flex min-h-screen items-center justify-center text-sm text-silver">
         Loading admin…
       </div>
     );
@@ -231,26 +231,26 @@ export function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-sand">
-      <header className="border-b border-nile-ink/10 bg-white/90 backdrop-blur">
+    <div className="min-h-screen bg-ink text-mist">
+      <header className="glass sticky top-0 z-40 border-b border-line">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-nile text-sand">
+            <span className="logo-mark flex h-9 w-9 items-center justify-center rounded-xl bg-cyan text-ink">
               <Package className="h-4 w-4" />
             </span>
             <div>
-              <p className="font-display text-lg font-semibold text-nile-ink">
+              <p className="font-display text-lg font-semibold text-mist">
                 Nile Packs Admin
               </p>
-              <p className="text-xs text-nile-muted">
-                {user?.email} · {user?.role}
+              <p className="text-xs text-silver">
+                {user?.email} · <span className="text-gold">{user?.role}</span>
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={() => void onLogout()}
-            className="inline-flex items-center gap-2 rounded-full border border-nile-ink/15 px-3 py-2 text-sm font-medium text-nile-ink hover:bg-nile/5"
+            className="btn-ghost focus-ring inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition"
           >
             <LogOut className="h-4 w-4" />
             Sign out
@@ -262,10 +262,10 @@ export function AdminDashboard() {
               key={id}
               type="button"
               onClick={() => setTab(id)}
-              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
+              className={`focus-ring inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
                 tab === id
-                  ? "bg-nile text-sand shadow-sm"
-                  : "text-nile-muted hover:bg-nile/8 hover:text-nile"
+                  ? "bg-cyan text-ink shadow-sm shadow-cyan/25"
+                  : "text-silver hover:bg-cyan/10 hover:text-cyan"
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -277,19 +277,19 @@ export function AdminDashboard() {
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         {error ? (
-          <div className="mb-4 rounded-xl border border-terracotta/30 bg-terracotta/10 px-4 py-3 text-sm text-terracotta">
+          <div className="mb-4 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">
             {error}
           </div>
         ) : null}
         {busy ? (
-          <p className="mb-3 text-xs font-medium uppercase tracking-wider text-nile-muted">
+          <p className="mb-3 text-xs font-medium uppercase tracking-wider text-silver">
             Working…
           </p>
         ) : null}
 
         {tab === "overview" && (
           <section className="space-y-6">
-            <h2 className="font-display text-2xl font-semibold text-nile-ink">
+            <h2 className="font-display text-2xl font-semibold text-mist">
               Overview
             </h2>
             <div className="grid gap-4 sm:grid-cols-3">
@@ -309,39 +309,39 @@ export function AdminDashboard() {
               ].map((c) => (
                 <div
                   key={c.label}
-                  className="rounded-2xl border border-nile-ink/8 bg-white p-5 shadow-sm"
+                  className="glass-panel rounded-2xl p-5"
                 >
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-nile-muted">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-silver">
                     {c.label}
                   </p>
-                  <p className="mt-2 font-display text-2xl font-semibold text-nile">
+                  <p className="mt-2 font-display text-2xl font-semibold text-cyan">
                     {c.value}
                   </p>
                 </div>
               ))}
             </div>
-            <div className="rounded-2xl border border-nile-ink/8 bg-white p-5 shadow-sm">
-              <h3 className="font-display text-lg font-semibold text-nile-ink">
+            <div className="glass-panel rounded-2xl p-5">
+              <h3 className="font-display text-lg font-semibold text-mist">
                 Recent orders
               </h3>
               {(stats?.recentOrders?.length ?? 0) === 0 ? (
-                <p className="mt-3 text-sm text-nile-muted">
+                <p className="mt-3 text-sm text-silver">
                   No orders yet. Empty state is OK until Paymob is live.
                 </p>
               ) : (
-                <ul className="mt-3 divide-y divide-nile-ink/8">
+                <ul className="mt-3 divide-y divide-line">
                   {stats!.recentOrders.map((o) => (
                     <li
                       key={o.merchantOrderId}
                       className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm"
                     >
                       <div>
-                        <p className="font-medium text-nile-ink">{o.name || "—"}</p>
-                        <p className="text-xs text-nile-muted">
+                        <p className="font-medium text-mist">{o.name || "—"}</p>
+                        <p className="text-xs text-silver">
                           {o.merchantOrderId} · {o.status}
                         </p>
                       </div>
-                      <p className="font-semibold text-nile">
+                      <p className="font-semibold text-cyan">
                         {formatLE((o.amountCents || 0) / 100)}
                       </p>
                     </li>
@@ -354,20 +354,20 @@ export function AdminDashboard() {
 
         {tab === "products" && (
           <section className="space-y-4">
-            <h2 className="font-display text-2xl font-semibold text-nile-ink">
+            <h2 className="font-display text-2xl font-semibold text-mist">
               Products
             </h2>
             <div className="space-y-3">
               {products.map((p) => (
                 <div
                   key={p.id}
-                  className="flex flex-col gap-3 rounded-2xl border border-nile-ink/8 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+                  className="row-hover flex flex-col gap-3 rounded-2xl border border-line bg-panel p-4 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="min-w-0">
-                    <p className="font-display text-lg font-semibold text-nile-ink">
+                    <p className="font-display text-lg font-semibold text-mist">
                       {p.name}
                     </p>
-                    <p className="text-xs text-nile-muted">
+                    <p className="text-xs text-silver">
                       {p.slug} · {formatLE(p.priceLE)}
                       {p.removed ? " · removed" : ""}
                       {!p.inStock ? " · out of stock" : " · in stock"}
@@ -381,7 +381,7 @@ export function AdminDashboard() {
                       onClick={() =>
                         void updateProduct(p.id, { inStock: !p.inStock })
                       }
-                      className="rounded-full border border-nile-ink/15 px-3 py-1.5 text-xs font-semibold hover:bg-nile/5"
+                      className="btn-ghost focus-ring rounded-full px-3 py-1.5 text-xs font-semibold disabled:opacity-50"
                     >
                       {p.inStock ? "Mark out of stock" : "Restock"}
                     </button>
@@ -391,7 +391,7 @@ export function AdminDashboard() {
                       onClick={() =>
                         void updateProduct(p.id, { removed: !p.removed })
                       }
-                      className="rounded-full border border-nile-ink/15 px-3 py-1.5 text-xs font-semibold hover:bg-nile/5"
+                      className="btn-ghost focus-ring rounded-full px-3 py-1.5 text-xs font-semibold disabled:opacity-50"
                     >
                       {p.removed ? "Restore" : "Soft-remove"}
                     </button>
@@ -401,7 +401,7 @@ export function AdminDashboard() {
                       onClick={() =>
                         void updateProduct(p.id, { featured: !p.featured })
                       }
-                      className="rounded-full border border-nile-ink/15 px-3 py-1.5 text-xs font-semibold hover:bg-nile/5"
+                      className="btn-ghost focus-ring rounded-full px-3 py-1.5 text-xs font-semibold disabled:opacity-50"
                     >
                       {p.featured ? "Unfeature" : "Feature"}
                     </button>
@@ -414,15 +414,15 @@ export function AdminDashboard() {
 
         {tab === "orders" && (
           <section className="space-y-4">
-            <h2 className="font-display text-2xl font-semibold text-nile-ink">
+            <h2 className="font-display text-2xl font-semibold text-mist">
               Orders
             </h2>
             {orders.length === 0 ? (
-              <p className="text-sm text-nile-muted">No orders in KV yet.</p>
+              <p className="text-sm text-silver">No orders in KV yet.</p>
             ) : (
-              <div className="overflow-x-auto rounded-2xl border border-nile-ink/8 bg-white shadow-sm">
+              <div className="glass-panel overflow-x-auto rounded-2xl">
                 <table className="min-w-full text-left text-sm">
-                  <thead className="border-b border-nile-ink/8 bg-sand/60 text-xs uppercase tracking-wider text-nile-muted">
+                  <thead className="border-b border-line bg-ink-2/60 text-xs uppercase tracking-wider text-silver">
                     <tr>
                       <th className="px-4 py-3">Order</th>
                       <th className="px-4 py-3">Customer</th>
@@ -434,16 +434,16 @@ export function AdminDashboard() {
                     {orders.map((o) => (
                       <tr
                         key={o.merchantOrderId}
-                        className="border-b border-nile-ink/5"
+                        className="border-b border-line/60"
                       >
-                        <td className="px-4 py-3 font-mono text-xs">
+                        <td className="px-4 py-3 font-mono text-xs text-mist">
                           {o.merchantOrderId}
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-3 text-mist">
                           <div>{o.name}</div>
-                          <div className="text-xs text-nile-muted">{o.email}</div>
+                          <div className="text-xs text-silver">{o.email}</div>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-3 text-cyan">
                           {formatLE((o.amountCents || 0) / 100)}
                         </td>
                         <td className="px-4 py-3">
@@ -462,7 +462,7 @@ export function AdminDashboard() {
                                 e.target.value as AdminOrder["status"]
                               )
                             }
-                            className="rounded-lg border border-nile-ink/15 bg-sand/40 px-2 py-1.5 text-xs"
+                            className="focus-ring rounded-lg border border-line bg-ink-2 px-2 py-1.5 text-xs text-mist outline-none focus:border-cyan"
                           >
                             <option value="pending">pending</option>
                             <option value="paid">paid</option>
@@ -481,15 +481,15 @@ export function AdminDashboard() {
 
         {tab === "team" && user?.role === "owner" && (
           <section className="space-y-6">
-            <h2 className="font-display text-2xl font-semibold text-nile-ink">
+            <h2 className="font-display text-2xl font-semibold text-mist">
               Team
             </h2>
             <form
               onSubmit={(e) => void onInvite(e)}
-              className="grid gap-3 rounded-2xl border border-nile-ink/8 bg-white p-5 shadow-sm sm:grid-cols-2 lg:grid-cols-4"
+              className="glass-panel grid gap-3 rounded-2xl p-5 sm:grid-cols-2 lg:grid-cols-4"
             >
               <label className="block sm:col-span-1">
-                <span className="text-xs font-bold uppercase tracking-wider text-nile-muted">
+                <span className="text-xs font-bold uppercase tracking-wider text-silver">
                   Email
                 </span>
                 <input
@@ -497,11 +497,11 @@ export function AdminDashboard() {
                   required
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="mt-1 w-full rounded-xl border border-nile-ink/15 px-3 py-2 text-sm"
+                  className="focus-ring mt-1 w-full rounded-xl border border-line bg-ink-2 px-3 py-2 text-sm text-mist outline-none focus:border-cyan focus:ring-2 focus:ring-cyan/20"
                 />
               </label>
               <label className="block">
-                <span className="text-xs font-bold uppercase tracking-wider text-nile-muted">
+                <span className="text-xs font-bold uppercase tracking-wider text-silver">
                   Temp password
                 </span>
                 <input
@@ -510,11 +510,11 @@ export function AdminDashboard() {
                   minLength={8}
                   value={invitePassword}
                   onChange={(e) => setInvitePassword(e.target.value)}
-                  className="mt-1 w-full rounded-xl border border-nile-ink/15 px-3 py-2 text-sm"
+                  className="focus-ring mt-1 w-full rounded-xl border border-line bg-ink-2 px-3 py-2 text-sm text-mist outline-none focus:border-cyan focus:ring-2 focus:ring-cyan/20"
                 />
               </label>
               <label className="block">
-                <span className="text-xs font-bold uppercase tracking-wider text-nile-muted">
+                <span className="text-xs font-bold uppercase tracking-wider text-silver">
                   Role
                 </span>
                 <select
@@ -522,7 +522,7 @@ export function AdminDashboard() {
                   onChange={(e) =>
                     setInviteRole(e.target.value as AdminRole)
                   }
-                  className="mt-1 w-full rounded-xl border border-nile-ink/15 px-3 py-2 text-sm"
+                  className="focus-ring mt-1 w-full rounded-xl border border-line bg-ink-2 px-3 py-2 text-sm text-mist outline-none focus:border-cyan"
                 >
                   <option value="staff">staff</option>
                   <option value="owner">owner</option>
@@ -532,7 +532,7 @@ export function AdminDashboard() {
                 <button
                   type="submit"
                   disabled={busy}
-                  className="w-full rounded-full bg-nile py-2.5 text-sm font-semibold text-sand hover:bg-nile-deep disabled:opacity-50"
+                  className="btn-shine btn-primary focus-ring w-full rounded-full py-2.5 text-sm font-semibold disabled:opacity-50"
                 >
                   Add user
                 </button>
@@ -543,12 +543,13 @@ export function AdminDashboard() {
               {users.map((u) => (
                 <li
                   key={u.id}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-nile-ink/8 bg-white px-4 py-3 shadow-sm"
+                  className="row-hover flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-panel px-4 py-3"
                 >
                   <div>
-                    <p className="font-medium text-nile-ink">{u.email}</p>
-                    <p className="text-xs text-nile-muted">
-                      {u.role} · {u.active ? "active" : "inactive"}
+                    <p className="font-medium text-mist">{u.email}</p>
+                    <p className="text-xs text-silver">
+                      <span className="text-gold">{u.role}</span> ·{" "}
+                      {u.active ? "active" : "inactive"}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -560,7 +561,7 @@ export function AdminDashboard() {
                           role: e.target.value as AdminRole,
                         }).then(() => fetchAdminUsers().then((r) => setUsers(r.users)))
                       }
-                      className="rounded-lg border border-nile-ink/15 px-2 py-1.5 text-xs"
+                      className="focus-ring rounded-lg border border-line bg-ink-2 px-2 py-1.5 text-xs text-mist outline-none focus:border-cyan disabled:opacity-40"
                     >
                       <option value="staff">staff</option>
                       <option value="owner">owner</option>
@@ -574,7 +575,7 @@ export function AdminDashboard() {
                             fetchAdminUsers().then((r) => setUsers(r.users))
                         )
                       }
-                      className="rounded-full border border-nile-ink/15 px-3 py-1.5 text-xs font-semibold hover:bg-nile/5 disabled:opacity-40"
+                      className="btn-ghost focus-ring rounded-full px-3 py-1.5 text-xs font-semibold disabled:opacity-40"
                     >
                       {u.active ? "Deactivate" : "Activate"}
                     </button>
@@ -605,7 +606,7 @@ export function AdminDashboard() {
                           )
                           .finally(() => setBusy(false));
                       }}
-                      className="rounded-full border border-terracotta/40 px-3 py-1.5 text-xs font-semibold text-terracotta hover:bg-terracotta/10 disabled:opacity-40"
+                      className="focus-ring rounded-full border border-danger/40 px-3 py-1.5 text-xs font-semibold text-danger transition hover:bg-danger/10 disabled:opacity-40"
                     >
                       Remove
                     </button>
