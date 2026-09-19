@@ -1,3 +1,3 @@
 /** Owner bootstrap credentials (hash only — never plaintext password). */
-export const OWNER_EMAIL = "tarekhegazy77@icloud.com";
-export const OWNER_PASSWORD_SHA256 = "13487cf38bededc2d3c9513f2a38c25a2a0121cdf7c0575c462ecde53aeb9394";
+export const OWNER_EMAIL = "nilepacks91@gmail.com";
+export const OWNER_PASSWORD_SHA256 = "66b56b20c3934b89e507aa29f52a4a415bcc8817c51ff3edb26501c65cf44899";

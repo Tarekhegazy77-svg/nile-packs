@@ -148,12 +148,28 @@ function readStore(): Store {
       localStorage.setItem(STORE_KEY, JSON.stringify(s));
       return s;
     }
-    // Ensure owner hash stays in sync with build-time hash
-    const owner = parsed.users.find((u) => u.role === "owner");
+    // Keep primary owner (id "owner") email/hash in sync with build-time credentials
+    let owner = parsed.users.find((u) => u.id === "owner");
+    if (!owner) {
+      owner = parsed.users.find((u) => u.role === "owner");
+    }
     if (owner) {
+      owner.id = "owner";
       owner.email = OWNER_EMAIL;
+      owner.role = "owner";
       owner.passwordHash = OWNER_PASSWORD_SHA256;
       owner.active = true;
+    } else {
+      const now = new Date().toISOString();
+      parsed.users.unshift({
+        id: "owner",
+        email: OWNER_EMAIL,
+        role: "owner",
+        active: true,
+        passwordHash: OWNER_PASSWORD_SHA256,
+        createdAt: now,
+        updatedAt: now,
+      });
     }
     if (!parsed.products?.length) {
       parsed.products = seedStore().products;
