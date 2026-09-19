@@ -16,7 +16,7 @@ export function StockAwareDetailActions({ productId }: Props) {
   return (
     <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
       {outOfStock ? (
-        <p className="w-full rounded-xl border border-terracotta/30 bg-terracotta/10 px-4 py-3 text-sm font-medium text-terracotta">
+        <p className="w-full rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm font-medium text-danger">
           This package is currently out of stock.
         </p>
       ) : null}
@@ -27,7 +27,7 @@ export function StockAwareDetailActions({ productId }: Props) {
       />
       <Link
         href="/cart"
-        className="focus-ring inline-flex min-h-11 w-full items-center justify-center rounded-full border border-nile-ink/15 px-5 py-3 text-sm font-semibold text-nile-ink transition-all duration-200 hover:scale-[1.03] hover:border-nile hover:bg-nile/5 hover:text-nile hover:shadow-sm active:scale-[0.98] sm:w-auto"
+        className="btn-ghost focus-ring inline-flex min-h-11 w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] sm:w-auto"
       >
         View cart
       </Link>

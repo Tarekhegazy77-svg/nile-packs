@@ -27,11 +27,27 @@ export function CatalogGrid({ mode = "all" }: Props) {
   return (
     <>
       {usingLiveCatalog ? (
-        <p className="mb-4 text-xs text-nile-muted">Live stock from admin catalog</p>
+        <p className="mb-4 text-xs text-silver">Live stock from admin catalog</p>
       ) : null}
-      <div className="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-        {list.map((product) => (
-          <ProductCard key={product.id} product={product} />
+      <div
+        className={
+          mode === "featured"
+            ? "grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-2"
+            : "grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3"
+        }
+      >
+        {list.map((product, i) => (
+          <div
+            key={product.id}
+            className={
+              mode === "featured" && i === 0 ? "bento-wide sm:col-span-2" : ""
+            }
+          >
+            <ProductCard
+              product={product}
+              featured={mode === "featured" && i === 0}
+            />
+          </div>
         ))}
       </div>
     </>

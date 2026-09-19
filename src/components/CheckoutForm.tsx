@@ -46,7 +46,7 @@ export function CheckoutForm() {
 
   if (!ready) {
     return (
-      <div className="rounded-2xl border border-nile-ink/8 bg-white px-6 py-12 text-center text-sm text-nile-muted">
+      <div className="rounded-2xl border border-white/8 bg-panel px-6 py-12 text-center text-sm text-silver">
         Loading checkout…
       </div>
     );
@@ -54,28 +54,28 @@ export function CheckoutForm() {
 
   if (lines.length === 0 && !paying) {
     return (
-      <div className="rounded-2xl border border-dashed border-nile-ink/20 bg-white px-5 py-14 text-center sm:px-8 sm:py-16">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-nile/8 text-nile">
+      <div className="rounded-2xl border border-dashed border-white/15 bg-panel/60 px-5 py-14 text-center sm:px-8 sm:py-16">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan/20 bg-cyan/10 text-cyan">
           <ShoppingBag className="h-7 w-7" />
         </div>
-        <h2 className="mt-5 font-display text-2xl font-semibold text-nile-ink">
+        <h2 className="mt-5 font-display text-2xl font-bold text-mist">
           Nothing to check out
         </h2>
-        <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-nile-muted sm:text-base">
+        <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-silver sm:text-base">
           Your cart is empty. Add a package first — then you can pay with the{" "}
           {off} sale already applied.
         </p>
         <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             href="/packages"
-            className="btn-shine focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/35 active:scale-[0.98]"
+            className="btn-shine btn-primary focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]"
           >
             Browse packages
             <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
             href="/cart"
-            className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-nile-ink/15 px-6 py-3 text-sm font-semibold text-nile-ink transition-all duration-200 hover:scale-[1.02] hover:border-nile hover:bg-nile/5 hover:text-nile hover:shadow-sm active:scale-[0.98]"
+            className="btn-ghost focus-ring inline-flex min-h-11 items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
             View cart
           </Link>
@@ -181,13 +181,13 @@ export function CheckoutForm() {
       <form
         onSubmit={handleSubmit}
         noValidate
-        className="rounded-2xl border border-nile-ink/8 bg-white p-5 shadow-sm sm:p-8"
+        className="glass-panel rounded-2xl p-5 sm:p-8"
       >
-        <div className="flex items-start gap-3 rounded-xl border border-nile/25 bg-nile/5 px-3.5 py-3 text-sm text-nile-ink sm:px-4">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-nile" />
+        <div className="flex items-start gap-3 rounded-xl border border-cyan/25 bg-cyan/8 px-3.5 py-3 text-sm text-mist sm:px-4">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-cyan" />
           <div>
             <p className="font-semibold">Paymob · Egyptian pounds</p>
-            <p className="mt-0.5 text-nile-muted">
+            <p className="mt-0.5 text-silver">
               {live
                 ? "You will be redirected to Paymob Unified Checkout. Card details never touch this site."
                 : "Paymob is wired on this checkout. Payments are not charging yet — completing the form only runs a local preview confirmation."}
@@ -196,16 +196,16 @@ export function CheckoutForm() {
         </div>
 
 
-        <h2 className="mt-6 font-display text-2xl font-semibold text-nile-ink">
+        <h2 className="mt-6 font-display text-2xl font-bold text-mist">
           Your details
         </h2>
-        <p className="mt-1 text-sm text-nile-muted">
+        <p className="mt-1 text-sm text-silver">
           Used for your receipt and Paymob billing when payments go live.
         </p>
 
         <div className="mt-6 space-y-4">
           <label className="block">
-            <span className="text-xs font-bold uppercase tracking-wide text-nile-muted">
+            <span className="text-xs font-bold uppercase tracking-wide text-silver">
               Full name
             </span>
             <input
@@ -220,21 +220,21 @@ export function CheckoutForm() {
               autoComplete="name"
               aria-invalid={Boolean(fieldErrors.name)}
               aria-describedby={fieldErrors.name ? "name-error" : undefined}
-              className={`mt-1.5 w-full rounded-xl border bg-sand px-4 py-3 text-base text-nile-ink outline-none transition duration-150 focus:ring-2 sm:text-sm ${
+              className={`mt-1.5 w-full rounded-xl border bg-ink-2 px-4 py-3 text-base text-mist outline-none transition duration-150 focus:ring-2 sm:text-sm ${
                 fieldErrors.name
-                  ? "border-terracotta focus:border-terracotta focus:ring-terracotta/20"
-                  : "border-nile-ink/15 focus:border-nile focus:ring-nile/20"
+                  ? "border-danger focus:border-danger focus:ring-danger/20"
+                  : "border-white/12 focus:border-cyan focus:ring-cyan/25"
               }`}
               placeholder="Your name"
             />
             {fieldErrors.name && (
-              <p id="name-error" className="mt-1.5 text-sm text-terracotta">
+              <p id="name-error" className="mt-1.5 text-sm text-danger">
                 {fieldErrors.name}
               </p>
             )}
           </label>
           <label className="block">
-            <span className="text-xs font-bold uppercase tracking-wide text-nile-muted">
+            <span className="text-xs font-bold uppercase tracking-wide text-silver">
               Email
             </span>
             <input
@@ -249,21 +249,21 @@ export function CheckoutForm() {
               autoComplete="email"
               aria-invalid={Boolean(fieldErrors.email)}
               aria-describedby={fieldErrors.email ? "email-error" : undefined}
-              className={`mt-1.5 w-full rounded-xl border bg-sand px-4 py-3 text-base text-nile-ink outline-none transition duration-150 focus:ring-2 sm:text-sm ${
+              className={`mt-1.5 w-full rounded-xl border bg-ink-2 px-4 py-3 text-base text-mist outline-none transition duration-150 focus:ring-2 sm:text-sm ${
                 fieldErrors.email
-                  ? "border-terracotta focus:border-terracotta focus:ring-terracotta/20"
-                  : "border-nile-ink/15 focus:border-nile focus:ring-nile/20"
+                  ? "border-danger focus:border-danger focus:ring-danger/20"
+                  : "border-white/12 focus:border-cyan focus:ring-cyan/25"
               }`}
               placeholder="you@example.com"
             />
             {fieldErrors.email && (
-              <p id="email-error" className="mt-1.5 text-sm text-terracotta">
+              <p id="email-error" className="mt-1.5 text-sm text-danger">
                 {fieldErrors.email}
               </p>
             )}
           </label>
           <label className="block">
-            <span className="text-xs font-bold uppercase tracking-wide text-nile-muted">
+            <span className="text-xs font-bold uppercase tracking-wide text-silver">
               Phone
             </span>
             <input
@@ -279,15 +279,15 @@ export function CheckoutForm() {
               inputMode="tel"
               aria-invalid={Boolean(fieldErrors.phone)}
               aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
-              className={`mt-1.5 w-full rounded-xl border bg-sand px-4 py-3 text-base text-nile-ink outline-none transition duration-150 focus:ring-2 sm:text-sm ${
+              className={`mt-1.5 w-full rounded-xl border bg-ink-2 px-4 py-3 text-base text-mist outline-none transition duration-150 focus:ring-2 sm:text-sm ${
                 fieldErrors.phone
-                  ? "border-terracotta focus:border-terracotta focus:ring-terracotta/20"
-                  : "border-nile-ink/15 focus:border-nile focus:ring-nile/20"
+                  ? "border-danger focus:border-danger focus:ring-danger/20"
+                  : "border-white/12 focus:border-cyan focus:ring-cyan/25"
               }`}
               placeholder="01xxxxxxxxx or +20…"
             />
             {fieldErrors.phone && (
-              <p id="phone-error" className="mt-1.5 text-sm text-terracotta">
+              <p id="phone-error" className="mt-1.5 text-sm text-danger">
                 {fieldErrors.phone}
               </p>
             )}
@@ -297,7 +297,7 @@ export function CheckoutForm() {
         {formError && (
           <p
             role="alert"
-            className="mt-4 rounded-lg bg-terracotta/10 px-3 py-2.5 text-sm text-terracotta"
+            className="mt-4 rounded-lg bg-danger/10 px-3 py-2.5 text-sm text-danger"
           >
             {formError}
           </p>
@@ -306,7 +306,7 @@ export function CheckoutForm() {
         <button
           type="submit"
           disabled={paying}
-          className="btn-shine focus-ring mt-8 flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-nile py-3.5 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.02] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/35 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
+          className="btn-shine btn-primary focus-ring mt-8 flex min-h-12 w-full items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
         >
           {paying ? (
             <>
@@ -322,15 +322,15 @@ export function CheckoutForm() {
             </>
           )}
         </button>
-        <p className="mt-3 text-center text-xs leading-relaxed text-nile-muted">
+        <p className="mt-3 text-center text-xs leading-relaxed text-silver">
           {live
             ? "You will leave this site briefly to complete payment on Paymob’s secure page."
             : "Preview only — no card details are collected and nothing is charged."}
         </p>
       </form>
 
-      <aside className="h-fit rounded-2xl border border-nile-ink/8 bg-white p-5 shadow-sm sm:p-6">
-        <h3 className="font-display text-lg font-semibold text-nile-ink">
+      <aside className="glass-panel h-fit rounded-2xl p-5 sm:p-6">
+        <h3 className="font-display text-lg font-bold text-mist">
           Order
         </h3>
         <ul className="mt-4 space-y-3 text-sm">
@@ -339,9 +339,9 @@ export function CheckoutForm() {
               key={l.product.id}
               className="flex justify-between gap-3 min-w-0"
             >
-              <span className="min-w-0 text-nile-ink">
+              <span className="min-w-0 text-mist">
                 <span className="break-words">{l.product.name}</span>{" "}
-                <span className="text-nile-muted">×{l.quantity}</span>
+                <span className="text-silver">×{l.quantity}</span>
               </span>
               <span className="shrink-0 font-medium tabular-nums">
                 {formatLE(roundMoney(l.lineDiscounted))}
@@ -349,21 +349,21 @@ export function CheckoutForm() {
             </li>
           ))}
         </ul>
-        <dl className="mt-4 space-y-1 border-t border-nile-ink/10 pt-4 text-sm">
-          <div className="flex justify-between gap-3 text-nile-muted">
+        <dl className="mt-4 space-y-1 border-t border-white/10 pt-4 text-sm">
+          <div className="flex justify-between gap-3 text-silver">
             <dt>Original</dt>
             <dd className="line-through tabular-nums">{formatLE(original)}</dd>
           </div>
-          <div className="flex justify-between gap-3 text-teal">
+          <div className="flex justify-between gap-3 text-cyan">
             <dt>Saved ({off})</dt>
             <dd className="tabular-nums">−{formatLE(saved)}</dd>
           </div>
-          <div className="flex justify-between gap-3 text-base font-bold text-nile-ink">
+          <div className="flex justify-between gap-3 text-base font-bold text-mist">
             <dt>Total due</dt>
             <dd className="tabular-nums">{formatLE(total)}</dd>
           </div>
         </dl>
-        <p className="mt-3 text-xs leading-relaxed text-nile-muted">
+        <p className="mt-3 text-xs leading-relaxed text-silver">
           Sale price already includes the automatic {off} discount.
           {live ? " Charged in EGP via Paymob." : ""}
         </p>

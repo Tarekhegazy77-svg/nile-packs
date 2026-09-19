@@ -6,31 +6,31 @@ export default function NotFound() {
   const off = discountPercentLabel();
 
   return (
-    <div className="mx-auto flex max-w-lg flex-col items-center px-4 py-20 text-center sm:py-24">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-nile/8 text-nile">
+    <div className="mx-auto flex max-w-lg flex-col items-center px-4 py-20 text-center sm:py-28">
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan/25 bg-cyan/10 text-cyan shadow-[0_0_30px_rgb(60_240_216/0.2)]">
         <Compass className="h-7 w-7" />
       </div>
-      <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-terracotta">
+      <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.2em] text-gold">
         404
       </p>
-      <h1 className="mt-2 font-display text-3xl font-semibold text-nile-ink sm:text-4xl">
+      <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-mist sm:text-4xl">
         That page drifted away
       </h1>
-      <p className="mt-3 text-sm leading-relaxed text-nile-muted sm:text-base">
+      <p className="mt-3 text-sm leading-relaxed text-silver sm:text-base">
         The link may be outdated, or the package never existed. Head back to the
         catalog — every download is still {off} off with no coupon.
       </p>
       <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
         <Link
           href="/packages"
-          className="btn-shine focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20 transition-all duration-200 hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/35 active:scale-[0.98]"
+          className="btn-shine btn-primary focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]"
         >
           Browse packages
           <ArrowRight className="h-4 w-4" />
         </Link>
         <Link
           href="/"
-          className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-nile-ink/15 px-6 py-3 text-sm font-semibold text-nile-ink transition-all duration-200 hover:scale-[1.02] hover:border-nile hover:bg-nile/5 hover:text-nile hover:shadow-sm active:scale-[0.98]"
+          className="btn-ghost focus-ring inline-flex min-h-11 items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
         >
           Go home
         </Link>

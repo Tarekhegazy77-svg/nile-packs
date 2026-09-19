@@ -40,18 +40,18 @@ export default async function PackageDetailPage({ params }: Props) {
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-14">
       <Link
         href="/packages"
-        className="link-soft focus-ring group inline-flex items-center gap-1.5 rounded-md text-sm font-medium text-nile-muted hover:text-nile"
+        className="link-soft focus-ring group inline-flex min-h-11 items-center gap-1.5 rounded-md text-sm font-medium text-silver hover:text-cyan"
       >
         <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
         Back to catalog
       </Link>
 
-      <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:items-start">
+      <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-14">
         <div
-          className={`group/media relative overflow-hidden rounded-3xl p-8 text-sand shadow-xl shadow-nile/20 transition-shadow duration-300 hover:shadow-2xl hover:shadow-nile/30 sm:min-h-[360px] sm:p-10 ${
+          className={`group/media relative overflow-hidden rounded-[1.75rem] border border-white/10 p-8 text-mist shadow-2xl shadow-black/50 transition-shadow duration-300 hover:shadow-[0_0_60px_-20px_rgb(60_240_216/0.25)] sm:min-h-[380px] sm:p-10 ${
             product.image
-              ? "bg-nile"
-              : "bg-gradient-to-br from-nile via-nile-deep to-teal"
+              ? "bg-panel"
+              : "bg-gradient-to-br from-panel-2 via-ink-2 to-cyan/20"
           }`}
         >
           {product.image ? (
@@ -66,45 +66,45 @@ export default async function PackageDetailPage({ params }: Props) {
           <div
             className={`absolute inset-0 ${
               product.image
-                ? "bg-gradient-to-t from-black/75 via-black/20 to-black/10"
-                : "scale-100 opacity-40 transition-transform duration-700 ease-out group-hover/media:scale-110 [background-image:radial-gradient(circle_at_30%_20%,white_0,transparent_45%),radial-gradient(circle_at_90%_80%,#e8b84a_0,transparent_40%)]"
+                ? "bg-gradient-to-t from-ink/85 via-ink/30 to-ink/10"
+                : "scale-100 opacity-50 transition-transform duration-700 ease-out group-hover/media:scale-110 [background-image:radial-gradient(circle_at_30%_20%,rgb(60_240_216/0.35)_0,transparent_45%),radial-gradient(circle_at_90%_80%,rgb(232_200_114/0.3)_0,transparent_40%)]"
             }`}
           />
           <div className="relative flex h-full flex-col justify-between gap-12">
             <div>
-              <span className="rounded-full bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] backdrop-blur">
+              <span className="rounded-full border border-white/15 bg-ink/40 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] backdrop-blur">
                 Digital download
               </span>
-              <h1 className="mt-6 font-display text-4xl font-semibold leading-tight sm:text-5xl">
+              <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
                 {product.name}
               </h1>
             </div>
-            <p className="text-sm text-sand/70">
-              Instant access after demo checkout · LE pricing
+            <p className="text-sm text-silver">
+              Instant access after checkout · LE pricing
             </p>
           </div>
         </div>
 
         <div>
           <PriceDisplay priceLE={product.priceLE} size="lg" />
-          <p className="mt-2 text-sm font-medium text-teal">
+          <p className="mt-2 text-sm font-medium text-cyan">
             You save {formatLE(saved)} · {off} off applied automatically
           </p>
-          <p className="mt-5 text-base leading-relaxed text-nile-muted">
+          <p className="mt-5 text-base leading-relaxed text-silver">
             {product.description}
           </p>
 
-          <div className="mt-8">
-            <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-nile-muted">
+          <div className="mt-8 rounded-2xl border border-white/8 bg-panel/60 p-5">
+            <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-gold">
               What&apos;s included
             </h2>
-            <ul className="mt-3 space-y-2">
+            <ul className="mt-4 space-y-2.5">
               {product.includes.map((item) => (
                 <li
                   key={item}
-                  className="flex items-start gap-2.5 text-sm text-nile-ink"
+                  className="flex items-start gap-2.5 text-sm text-mist"
                 >
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-teal/15 text-teal">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan/15 text-cyan">
                     <Check className="h-3 w-3" strokeWidth={3} />
                   </span>
                   {item}

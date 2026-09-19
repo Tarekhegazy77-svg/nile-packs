@@ -8,10 +8,10 @@ export const metadata: Metadata = {
 export default function CheckoutPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
-      <h1 className="font-display text-3xl font-semibold text-nile-ink sm:text-4xl">
+      <h1 className="font-display text-3xl font-extrabold tracking-tight text-mist sm:text-4xl">
         Checkout
       </h1>
-      <p className="mt-2 text-sm text-nile-muted sm:text-base">
+      <p className="mt-2 text-sm text-silver sm:text-base">
         Paymob (EGP) — coming soon / not charging. Sale totals already include
         40% off.
       </p>

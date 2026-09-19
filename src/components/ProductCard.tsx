@@ -9,12 +9,12 @@ import { useCatalogOptional } from "@/context/CatalogContext";
 import { assetPath } from "@/lib/asset-path";
 
 const accents = [
-  "from-nile/90 to-teal",
-  "from-terracotta to-saffron",
-  "from-teal to-nile",
-  "from-saffron to-terracotta",
-  "from-nile-deep to-nile",
-  "from-terracotta/90 to-nile",
+  "from-cyan/80 to-cyan-dim/40",
+  "from-gold/70 to-danger/40",
+  "from-cyan-dim/70 to-panel",
+  "from-gold/50 to-cyan/30",
+  "from-panel-2 to-cyan/50",
+  "from-danger/50 to-gold/40",
 ];
 
 function accentFor(id: string): string {
@@ -26,9 +26,10 @@ function accentFor(id: string): string {
 
 type Props = {
   product: Product;
+  featured?: boolean;
 };
 
-export function ProductCard({ product: initial }: Props) {
+export function ProductCard({ product: initial, featured = false }: Props) {
   const catalog = useCatalogOptional();
   const live = catalog?.getById(initial.id);
   const product = live
@@ -45,10 +46,19 @@ export function ProductCard({ product: initial }: Props) {
   const accent = accentFor(product.id);
 
   return (
-    <article className="card-lift group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-nile-ink/8 bg-white shadow-sm shadow-nile-ink/5">
-      <Link href={`/packages/${product.slug}`} className="block min-w-0 focus-ring rounded-t-2xl">
+    <article
+      className={`card-lift group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-white/8 bg-panel shadow-lg shadow-black/40 ${
+        featured ? "sm:flex-row" : ""
+      }`}
+    >
+      <Link
+        href={`/packages/${product.slug}`}
+        className={`block min-w-0 focus-ring ${featured ? "sm:w-[44%] sm:shrink-0" : "rounded-t-2xl"}`}
+      >
         <div
-          className={`relative flex h-32 items-end overflow-hidden bg-gradient-to-br sm:h-36 ${accent} p-4`}
+          className={`relative flex items-end overflow-hidden bg-gradient-to-br ${accent} p-4 ${
+            featured ? "h-40 sm:h-full sm:min-h-[220px]" : "h-36 sm:h-40"
+          }`}
         >
           {product.image ? (
             <Image
@@ -62,37 +72,43 @@ export function ProductCard({ product: initial }: Props) {
           <div
             className={`absolute inset-0 ${
               product.image
-                ? "bg-gradient-to-t from-black/45 via-black/5 to-transparent"
-                : "scale-100 opacity-30 mix-blend-overlay transition-transform duration-500 ease-out group-hover:scale-125 [background-image:radial-gradient(circle_at_20%_20%,white_0,transparent_40%),radial-gradient(circle_at_80%_60%,black_0,transparent_35%)]"
+                ? "bg-gradient-to-t from-ink/80 via-ink/20 to-transparent"
+                : "scale-100 opacity-40 mix-blend-overlay transition-transform duration-500 ease-out group-hover:scale-125 [background-image:radial-gradient(circle_at_20%_20%,white_0,transparent_40%),radial-gradient(circle_at_80%_60%,black_0,transparent_35%)]"
             }`}
           />
-          <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 [box-shadow:inset_0_0_0_1px_rgb(255_255_255/0.2),inset_0_-40px_60px_-20px_rgb(0_0_0/0.25)]" />
-          <span className="relative rounded-md bg-white/15 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-sm transition-colors duration-200 group-hover:bg-white/25">
+          <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 [box-shadow:inset_0_0_0_1px_rgb(60_240_216/0.25),inset_0_-40px_60px_-20px_rgb(0_0_0/0.5)]" />
+          <span className="relative rounded-md border border-white/15 bg-ink/50 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-mist backdrop-blur-sm">
             {outOfStock ? "Out of stock" : "Digital package"}
           </span>
         </div>
-        <div className="space-y-2 px-4 pt-4 sm:px-5">
-          <h3 className="font-display text-lg font-semibold text-nile-ink transition-colors duration-200 group-hover:text-nile sm:text-xl">
+      </Link>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Link
+          href={`/packages/${product.slug}`}
+          className="block space-y-2 px-4 pt-4 focus-ring sm:px-5"
+        >
+          <h3 className="font-display text-lg font-bold tracking-tight text-mist transition-colors duration-200 group-hover:text-cyan sm:text-xl">
             {product.name}
           </h3>
-          <p className="line-clamp-2 text-sm leading-relaxed text-nile-muted">
+          <p className="line-clamp-2 text-sm leading-relaxed text-silver">
             {product.description}
           </p>
-        </div>
-      </Link>
-      <div className="mt-auto flex flex-col gap-3 px-4 pb-4 pt-4 sm:px-5 sm:pb-5">
-        <PriceDisplay priceLE={product.priceLE} size="md" />
-        <div className="flex min-w-0 items-stretch gap-2">
-          <AddToCartButton
-            productId={product.id}
-            className="min-h-11 min-w-0 flex-1"
-          />
-          <Link
-            href={`/packages/${product.slug}`}
-            className="focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full border border-nile-ink/15 px-3.5 text-sm font-medium text-nile-ink transition-all duration-200 hover:scale-[1.03] hover:border-nile hover:bg-nile/5 hover:text-nile hover:shadow-sm active:scale-[0.97] sm:px-4"
-          >
-            Details
-          </Link>
+        </Link>
+        <div className="mt-auto flex flex-col gap-3 px-4 pb-4 pt-4 sm:px-5 sm:pb-5">
+          <PriceDisplay priceLE={product.priceLE} size="md" />
+          <div className="flex min-w-0 items-stretch gap-2">
+            <AddToCartButton
+              productId={product.id}
+              className="min-h-11 min-w-0 flex-1"
+            />
+            <Link
+              href={`/packages/${product.slug}`}
+              className="btn-ghost focus-ring inline-flex min-h-11 shrink-0 items-center justify-center rounded-full px-3.5 text-sm font-medium transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] sm:px-4"
+            >
+              Details
+            </Link>
+          </div>
         </div>
       </div>
     </article>

@@ -1,29 +1,29 @@
 import type { Metadata } from "next";
-import { DM_Sans, Fraunces } from "next/font/google";
+import { Syne, Manrope } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["600", "700", "800"],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Nile Packs — Digital packages in LE",
+    default: "Nile Packs — Editorial digital commerce in LE",
     template: "%s · Nile Packs",
   },
   description:
-    "Instant digital download packages for creators and agencies. Prices in Egyptian pounds with automatic 40% off.",
+    "Premium digital packages for creators and agencies. Instant delivery, Egyptian pounds, automatic sale pricing — no coupon required.",
 };
 
 export default function RootLayout({
@@ -32,8 +32,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${fraunces.variable} h-full`}>
-      <body className="grain flex min-h-full flex-col antialiased">
+    <html lang="en" className={`${manrope.variable} ${syne.variable} h-full`}>
+      <body className="aurora flex min-h-full flex-col antialiased">
         <Providers>
           <Header />
           <main className="flex-1">{children}</main>

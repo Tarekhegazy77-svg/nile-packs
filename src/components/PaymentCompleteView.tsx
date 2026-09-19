@@ -164,7 +164,7 @@ export function PaymentCompleteView() {
 
   if (!ready) {
     return (
-      <div className="rounded-2xl border border-nile-ink/8 bg-white px-6 py-16 text-center text-nile-muted">
+      <div className="rounded-2xl border border-white/8 bg-panel px-6 py-16 text-center text-silver">
         Loading payment status…
       </div>
     );
@@ -172,18 +172,18 @@ export function PaymentCompleteView() {
 
   if (!live) {
     return (
-      <div className="rounded-2xl border border-dashed border-nile-ink/20 bg-white px-5 py-14 text-center sm:px-8 sm:py-16">
-        <AlertCircle className="mx-auto h-10 w-10 text-terracotta" />
-        <h1 className="mt-5 font-display text-2xl font-semibold text-nile-ink">
+      <div className="rounded-2xl border border-dashed border-white/15 bg-panel/60 px-5 py-14 text-center sm:px-8 sm:py-16">
+        <AlertCircle className="mx-auto h-10 w-10 text-danger" />
+        <h1 className="mt-5 font-display text-2xl font-bold text-mist">
           Paymob is not configured
         </h1>
-        <p className="mx-auto mt-2 max-w-sm text-sm text-nile-muted">
+        <p className="mx-auto mt-2 max-w-sm text-sm text-silver">
           Set <code className="text-xs">NEXT_PUBLIC_PAYMOB_API_BASE</code> and
           rebuild to enable live payment confirmation.
         </p>
         <Link
           href="/checkout"
-          className="btn-shine focus-ring mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand"
+          className="btn-shine btn-primary focus-ring mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold"
         >
           Back to checkout
         </Link>
@@ -193,18 +193,18 @@ export function PaymentCompleteView() {
 
   if (!merchantOrderId) {
     return (
-      <div className="rounded-2xl border border-dashed border-nile-ink/20 bg-white px-5 py-14 text-center sm:px-8 sm:py-16">
-        <Package className="mx-auto h-10 w-10 text-nile" />
-        <h1 className="mt-5 font-display text-2xl font-semibold text-nile-ink">
+      <div className="rounded-2xl border border-dashed border-white/15 bg-panel/60 px-5 py-14 text-center sm:px-8 sm:py-16">
+        <Package className="mx-auto h-10 w-10 text-cyan" />
+        <h1 className="mt-5 font-display text-2xl font-bold text-mist">
           Missing order reference
         </h1>
-        <p className="mx-auto mt-2 max-w-sm text-sm text-nile-muted">
+        <p className="mx-auto mt-2 max-w-sm text-sm text-silver">
           We could not find a merchant order id in the URL. If you just paid,
           return from Paymob or contact support with your receipt.
         </p>
         <Link
           href="/packages"
-          className="btn-shine focus-ring mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand"
+          className="btn-shine btn-primary focus-ring mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold"
         >
           Browse packages
           <ArrowRight className="h-4 w-4" />
@@ -218,51 +218,51 @@ export function PaymentCompleteView() {
   if (status === "paid") {
     return (
       <div className="space-y-6 sm:space-y-8">
-        <div className="rounded-2xl border border-teal/20 bg-gradient-to-br from-teal/10 to-white p-6 text-center shadow-sm sm:p-8">
-          <CheckCircle2 className="mx-auto h-12 w-12 text-teal" />
-          <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-teal">
+        <div className="rounded-2xl glass-panel border border-cyan/20 p-6 text-center sm:p-8">
+          <CheckCircle2 className="mx-auto h-12 w-12 text-cyan" />
+          <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-cyan">
             Payment confirmed
           </p>
-          <h1 className="mt-2 font-display text-3xl font-semibold text-nile-ink sm:text-4xl">
+          <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-mist sm:text-4xl">
             You are all set
           </h1>
-          <p className="mt-3 text-sm leading-relaxed text-nile-muted sm:text-base">
+          <p className="mt-3 text-sm leading-relaxed text-silver sm:text-base">
             {displayName ? `Thanks, ${displayName}. ` : "Thanks. "}
             {displayEmail ? (
               <>
                 A receipt will go to{" "}
-                <span className="font-medium text-nile-ink">{displayEmail}</span>
+                <span className="font-medium text-mist">{displayEmail}</span>
                 .
               </>
             ) : null}
           </p>
           {displayTotal != null && (
-            <p className="mt-3 inline-flex rounded-full bg-white/80 px-3 py-1.5 text-sm font-semibold text-nile ring-1 ring-nile/10">
+            <p className="mt-3 inline-flex rounded-full border border-cyan/25 bg-cyan/10 px-3 py-1.5 text-sm font-semibold text-cyan">
               Paid: {formatLE(displayTotal)}
             </p>
           )}
-          <p className="mt-3 text-xs text-nile-muted">
+          <p className="mt-3 text-xs text-silver">
             Order {merchantOrderId}
           </p>
         </div>
 
         {displayItems.length > 0 && (
-          <section className="rounded-2xl border border-nile-ink/8 bg-white p-5 shadow-sm sm:p-8">
-            <h2 className="font-display text-xl font-semibold text-nile-ink">
+          <section className="rounded-2xl border border-white/8 bg-panel p-5 sm:p-8">
+            <h2 className="font-display text-xl font-bold text-mist">
               Your packages
             </h2>
-            <p className="mt-1 text-sm text-nile-muted">
+            <p className="mt-1 text-sm text-silver">
               Download delivery is still stubbed — wire real files when ready.
             </p>
             <ul className="mt-6 space-y-3">
               {displayItems.map((item, idx) => (
                 <li
                   key={item.id || item.slug || `${item.name}-${idx}`}
-                  className="row-hover flex flex-col gap-3 rounded-xl border border-nile-ink/8 bg-sand/60 p-4 sm:flex-row sm:items-center sm:justify-between"
+                  className="row-hover flex flex-col gap-3 rounded-xl border border-white/8 bg-ink-2/80 p-4 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="min-w-0">
-                    <p className="font-semibold text-nile-ink">{item.name}</p>
-                    <p className="text-xs text-nile-muted">
+                    <p className="font-semibold text-mist">{item.name}</p>
+                    <p className="text-xs text-silver">
                       Qty {item.quantity}
                       {item.unitPrice != null
                         ? ` · ${formatLE(item.unitPrice)} each`
@@ -276,7 +276,7 @@ export function PaymentCompleteView() {
                         `Download stub: "${item.name}"\nFile: ${(item.slug || "package").toString()}.zip`
                       );
                     }}
-                    className="btn-shine focus-ring inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-nile px-4 py-2.5 text-sm font-semibold text-sand sm:w-auto"
+                    className="btn-shine btn-primary focus-ring inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold sm:w-auto"
                   >
                     <Download className="h-4 w-4" />
                     Download .zip
@@ -290,7 +290,7 @@ export function PaymentCompleteView() {
         <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-center">
           <Link
             href="/packages"
-            className="btn-shine focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand shadow-md shadow-nile/20"
+            className="btn-shine btn-primary focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold"
           >
             Continue shopping
             <ArrowRight className="h-4 w-4" />
@@ -302,19 +302,19 @@ export function PaymentCompleteView() {
 
   if (status === "failed") {
     return (
-      <div className="rounded-2xl border border-terracotta/30 bg-white px-5 py-14 text-center sm:px-8 sm:py-16">
-        <AlertCircle className="mx-auto h-10 w-10 text-terracotta" />
-        <h1 className="mt-5 font-display text-2xl font-semibold text-nile-ink">
+      <div className="rounded-2xl border border-danger/30 bg-panel px-5 py-14 text-center sm:px-8 sm:py-16">
+        <AlertCircle className="mx-auto h-10 w-10 text-danger" />
+        <h1 className="mt-5 font-display text-2xl font-bold text-mist">
           Payment not completed
         </h1>
-        <p className="mx-auto mt-2 max-w-sm text-sm text-nile-muted">
+        <p className="mx-auto mt-2 max-w-sm text-sm text-silver">
           Paymob reported this payment as unsuccessful. You can try again from
           checkout — nothing was charged for a failed attempt.
         </p>
-        <p className="mt-3 text-xs text-nile-muted">Order {merchantOrderId}</p>
+        <p className="mt-3 text-xs text-silver">Order {merchantOrderId}</p>
         <Link
           href="/checkout"
-          className="btn-shine focus-ring mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-nile px-6 py-3 text-sm font-semibold text-sand"
+          className="btn-shine btn-primary focus-ring mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold"
         >
           Return to checkout
         </Link>
@@ -323,18 +323,18 @@ export function PaymentCompleteView() {
   }
 
   return (
-    <div className="rounded-2xl border border-nile-ink/8 bg-white px-5 py-14 text-center sm:px-8 sm:py-16">
-      <Loader2 className="mx-auto h-10 w-10 animate-spin text-nile" />
-      <h1 className="mt-5 font-display text-2xl font-semibold text-nile-ink">
+    <div className="rounded-2xl border border-white/8 bg-panel px-5 py-14 text-center sm:px-8 sm:py-16">
+      <Loader2 className="mx-auto h-10 w-10 animate-spin text-cyan" />
+      <h1 className="mt-5 font-display text-2xl font-bold text-mist">
         Confirming your payment…
       </h1>
-      <p className="mx-auto mt-2 max-w-sm text-sm text-nile-muted">
+      <p className="mx-auto mt-2 max-w-sm text-sm text-silver">
         Waiting for Paymob’s secure webhook. This usually takes a few seconds.
         Keep this tab open.
       </p>
-      <p className="mt-3 text-xs text-nile-muted">Order {merchantOrderId}</p>
+      <p className="mt-3 text-xs text-silver">Order {merchantOrderId}</p>
       {error && (
-        <p className="mt-4 text-sm text-terracotta" role="alert">
+        <p className="mt-4 text-sm text-danger" role="alert">
           {error}
         </p>
       )}

@@ -39,7 +39,7 @@ export function AddToCartButton({
         type="button"
         disabled
         data-testid={`out-of-stock-${productId}`}
-        className={`inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-nile-ink/10 px-5 py-2.5 text-sm font-semibold text-nile-muted ${className}`}
+        className={`inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-white/8 px-5 py-2.5 text-sm font-semibold text-silver ${className}`}
       >
         Out of stock
       </button>
@@ -51,10 +51,10 @@ export function AddToCartButton({
       type="button"
       onClick={handleClick}
       data-testid={`add-to-cart-${productId}`}
-      className={`btn-shine focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold shadow-sm transition-all duration-200 ${
+      className={`btn-shine focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold shadow-sm transition-all duration-200 ${
         justAdded
-          ? "scale-[1.02] bg-teal text-white shadow-md shadow-teal/35 ring-1 ring-teal/20"
-          : "bg-nile text-sand hover:scale-[1.03] hover:bg-nile-deep hover:shadow-lg hover:shadow-nile/40 active:scale-[0.97]"
+          ? "scale-[1.02] bg-cyan text-ink shadow-md shadow-cyan/35 ring-1 ring-cyan/30"
+          : "btn-primary hover:scale-[1.03] active:scale-[0.97]"
       } ${className}`}
     >
       {justAdded ? (
